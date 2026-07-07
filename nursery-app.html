@@ -1,0 +1,3239 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌱 Nursery Management App</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gd:#1a4731;--gm:#2d7a4f;--gl:#4caf78;--gp:#e8f5ee;--gg:#a8e6c0;
+  --bd:#0d3b6e;--bm:#1565c0;--bl:#42a5f5;--bp:#e3f2fd;
+  --or:#f57c00;--ol:#fff3e0;--rd:#e53935;--rl:#ffebee;
+  --pu:#6a1b9a;--pl:#f3e5f5;
+  --g1:#f7faf8;--g2:#e0e8f0;--g5:#6b7f99;--g8:#1e2d3d;
+  --sh:0 4px 24px rgba(26,71,49,0.13);--r:16px;--rs:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Baloo 2',sans-serif;background:var(--gd);min-height:100vh;color:var(--g8);}
+.screen{display:none;min-height:100vh;}
+
+/* LOGIN */
+#loginScreen{display:flex;align-items:center;justify-content:center;padding:24px;
+  background:linear-gradient(135deg,var(--gd),#0a2318);}
+.lbox{background:white;border-radius:24px;padding:32px 24px;width:100%;max-width:380px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.4);text-align:center;}
+.llogo{font-size:60px;margin-bottom:8px;}
+.ltitle{font-size:24px;font-weight:800;color:var(--gd);margin-bottom:2px;}
+.lsub{font-size:13px;color:var(--g5);margin-bottom:20px;}
+.pin-inp{letter-spacing:8px;font-size:22px!important;font-weight:700;text-align:center;}
+.lbtn{width:100%;padding:14px;background:linear-gradient(135deg,var(--gl),var(--gm));
+  color:white;border:none;border-radius:var(--rs);font-family:inherit;font-size:16px;font-weight:800;cursor:pointer;}
+.lbtn:disabled{opacity:0.6;cursor:not-allowed;}
+.lerr{background:var(--rl);color:var(--rd);border-radius:8px;padding:10px 14px;
+  font-size:13px;font-weight:600;margin-top:12px;display:none;}
+.lerr.show{display:block;}
+.linfo{background:var(--gp);color:var(--gm);border-radius:8px;padding:8px 12px;
+  font-size:12px;font-weight:600;margin-bottom:14px;}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,var(--gd),var(--gm));padding:14px 16px;
+  position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,0.3);}
+.htop{display:flex;align-items:center;gap:10px;}
+.hico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.htop h1{font-size:16px;font-weight:800;color:white;line-height:1.2;}
+.htop h1 span{display:block;font-size:11px;font-weight:500;color:var(--gg);}
+.dbadge{margin-left:auto;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);
+  color:white;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+.sbar{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
+.sbadge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,0.3);}
+.sbadge.admin{background:rgba(255,215,0,0.2);color:#ffd700;}
+.sbadge.manager{background:rgba(66,165,245,0.2);color:#90caf9;}
+.sbadge.supervisor{background:rgba(76,175,120,0.2);color:var(--gg);}
+.logbtn{background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2);
+  border-radius:20px;padding:4px 12px;font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;}
+.backbtn{display:flex;align-items:center;gap:6px;color:var(--gg);background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px;
+  font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;width:fit-content;}
+
+/* MENU */
+.mwrap{max-width:520px;margin:0 auto;padding:14px 12px 80px;}
+.role-banner{border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.role-banner.admin{background:linear-gradient(135deg,#f57f17,#f9a825);}
+.role-banner.manager{background:linear-gradient(135deg,var(--bm),var(--bl));}
+.role-banner.supervisor{background:linear-gradient(135deg,var(--gm),var(--gl));}
+.role-banner .rico{font-size:32px;}
+.role-banner .rtext h3{font-size:15px;font-weight:800;color:white;}
+.role-banner .rtext p{font-size:11px;color:rgba(255,255,255,0.8);}
+.msec-title{font-size:12px;font-weight:700;color:var(--gg);text-transform:uppercase;
+  letter-spacing:1px;margin-bottom:10px;padding-left:4px;}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.mcard{background:white;border-radius:var(--r);padding:18px 14px;cursor:pointer;
+  transition:all 0.2s;box-shadow:var(--sh);text-align:center;border:2px solid transparent;}
+.mcard:hover{transform:translateY(-3px);}
+.mcard:active{transform:translateY(0);}
+.mcard .ico{font-size:36px;margin-bottom:8px;}
+.mcard .ttl{font-size:13px;font-weight:800;color:var(--g8);margin-bottom:3px;}
+.mcard .dsc{font-size:11px;color:var(--g5);line-height:1.3;}
+.mcard.seed{border-color:#a8e6c0;}.mcard.water{border-color:#90caf9;}
+.mcard.attend{border-color:#ffcc80;}.mcard.assign{border-color:#f48fb1;}
+.mcard.report{border-color:#ce93d8;}.mcard.admin-c{border-color:#ffd54f;}
+.mcard.soon{opacity:0.5;cursor:not-allowed;}
+.cbadge{display:inline-block;background:#f1f8e9;color:#2e7d32;border:1px solid #a5d6a7;
+  border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;margin-top:4px;}
+
+/* CARDS */
+.wrap{max-width:520px;margin:0 auto;padding:0 0 80px;}
+.card{background:white;border-radius:var(--r);padding:14px;margin:10px 10px 0;box-shadow:var(--sh);}
+.ctitle{font-size:12px;font-weight:700;color:var(--gd);text-transform:uppercase;
+  letter-spacing:0.8px;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.ctitle::before{content:'';display:block;width:4px;height:14px;background:var(--gl);border-radius:2px;}
+.ctitle.blue::before{background:var(--bl);}
+.ctitle.orange::before{background:var(--or);}
+.ctitle.purple::before{background:var(--pu);}
+label{display:block;font-size:11px;font-weight:700;color:var(--g5);
+  margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;}
+input,select,textarea{width:100%;padding:9px 12px;border:2px solid var(--g2);
+  border-radius:var(--rs);font-family:inherit;font-size:14px;color:var(--g8);
+  background:var(--g1);transition:all 0.2s;outline:none;-webkit-appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--gl);background:white;
+  box-shadow:0 0 0 3px rgba(76,175,120,0.12);}
+.fr{margin-bottom:10px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;}
+
+/* VARIETY */
+.vblock{border:2px solid var(--gg);border-radius:var(--r);margin-bottom:12px;overflow:hidden;}
+.vbh{background:linear-gradient(135deg,var(--gd),var(--gm));padding:9px 14px;
+  display:flex;align-items:center;justify-content:space-between;}
+.vbt{color:white;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.vn{background:var(--gg);color:var(--gd);width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;}
+.vbb{background:var(--gp);padding:12px;}
+.tplants{background:var(--gd);color:white;border-radius:8px;padding:8px 12px;
+  display:flex;align-items:center;justify-content:space-between;margin:6px 0 12px;}
+.tplants .lbl{font-size:11px;color:var(--gg);}
+.tplants .val{font-size:20px;font-weight:800;}
+.lstitle{font-size:11px;font-weight:700;color:#5c3d1e;text-transform:uppercase;
+  letter-spacing:0.8px;margin-bottom:8px;padding-bottom:5px;
+  border-bottom:2px dashed #ffe0a0;display:flex;align-items:center;justify-content:space-between;}
+.lrow{background:white;border:1.5px solid #ffe0a0;border-radius:10px;padding:10px 12px;margin-bottom:8px;}
+.lrtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.lrn{background:var(--or);color:white;width:20px;height:20px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;}
+
+/* ASSIGNMENT */
+.akaam-block{border:2px solid #ffcc80;border-radius:var(--r);margin-bottom:12px;overflow:hidden;}
+.akbh{background:linear-gradient(135deg,#e65100,#f57c00);padding:9px 14px;
+  display:flex;align-items:center;justify-content:space-between;}
+.akbt{color:white;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.akn{background:#ffcc80;color:#bf360c;width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;}
+.akbb{background:#fff8f0;padding:12px;}
+.labour-tag{display:inline-flex;align-items:center;gap:4px;background:white;
+  border:1.5px solid #ffcc80;border-radius:20px;padding:4px 10px;margin:3px;
+  font-size:13px;font-weight:600;color:#5c3d1e;}
+.labour-tag button{background:none;border:none;color:#e53935;cursor:pointer;font-size:14px;padding:0;line-height:1;}
+.tags-wrap{display:flex;flex-wrap:wrap;min-height:36px;background:white;
+  border:2px solid var(--g2);border-radius:var(--rs);padding:6px;margin-bottom:8px;}
+.labour-search-wrap{display:flex;gap:6px;margin-bottom:8px;}
+.labour-dropdown{position:relative;}
+.ldrop-list{position:absolute;top:100%;left:0;right:0;background:white;
+  border:2px solid var(--gl);border-radius:var(--rs);max-height:150px;overflow-y:auto;
+  z-index:50;box-shadow:var(--sh);display:none;}
+.ldrop-list.show{display:block;}
+.ldrop-item{padding:8px 12px;cursor:pointer;font-size:13px;font-weight:600;border-bottom:1px solid var(--g2);}
+.ldrop-item:hover{background:var(--gp);}
+
+/* ATTENDANCE */
+.att-item{background:var(--g1);border:2px solid var(--g2);border-radius:var(--rs);
+  padding:10px 12px;margin-bottom:8px;transition:all 0.2s;}
+.att-item.present{border-color:var(--gl);background:var(--gp);}
+.att-item.absent{border-color:#ffcdd2;background:#fff5f5;}
+.att-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.att-name{font-size:14px;font-weight:700;color:var(--g8);}
+.att-kaam{font-size:11px;color:var(--g5);font-weight:600;}
+.sbtns{display:flex;gap:6px;}
+.sbtn{padding:5px 10px;border:2px solid var(--g2);border-radius:20px;
+  font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;background:white;transition:all 0.2s;}
+.sbtn.pa{border-color:var(--gl);background:var(--gl);color:white;}
+.sbtn.aa{border-color:var(--rd);background:var(--rd);color:white;}
+.att-det{display:none;margin-top:8px;}.att-det.show{display:block;}
+
+/* WATER */
+.ttog{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.tbtn{padding:10px 8px;border:2px solid var(--g2);border-radius:var(--rs);background:var(--g1);
+  font-family:inherit;font-size:13px;font-weight:700;color:var(--g5);cursor:pointer;text-align:center;transition:all 0.2s;}
+.tbtn.aw{border-color:var(--bl);background:var(--bp);color:var(--bm);}
+.tbtn.as{border-color:#66bb6a;background:#e8f5e9;color:#2e7d32;}
+.cblock{border:2px solid #c8e6c9;border-radius:var(--r);margin-bottom:10px;overflow:hidden;}
+.cbh{background:linear-gradient(135deg,#2e7d32,#388e3c);padding:9px 14px;
+  display:flex;align-items:center;justify-content:space-between;}
+.cbt{color:white;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.cn{background:#a5d6a7;color:#1b5e20;width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;}
+.cbb{background:#f1f8e9;padding:12px;}
+.wlblock{border:2px solid #ffe0b2;border-radius:var(--r);margin-bottom:10px;overflow:hidden;}
+.wlbh{background:linear-gradient(135deg,#e65100,#f57c00);padding:9px 14px;
+  display:flex;align-items:center;justify-content:space-between;}
+.wlbt{color:white;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.wln{background:#ffcc80;color:#bf360c;width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;}
+.wlbb{background:#fff8f0;padding:12px;}
+.wsec{display:none;}.wsec.show{display:block;}
+.watsec{display:block;}.watsec.hide{display:none;}
+.ipill{background:var(--bp);border:1px solid #90caf9;color:var(--bm);
+  padding:5px 12px;border-radius:8px;font-size:12px;font-weight:600;margin-bottom:10px;display:block;}
+
+/* REPORT */
+.rep-card{background:white;border-radius:var(--r);padding:14px;margin-bottom:10px;box-shadow:var(--sh);}
+.rep-title{font-size:14px;font-weight:800;color:var(--g8);margin-bottom:4px;}
+.rep-sub{font-size:12px;color:var(--g5);margin-bottom:12px;}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;}
+.stat-item{background:var(--g1);border-radius:10px;padding:10px;text-align:center;}
+.stat-item .sv{font-size:22px;font-weight:800;color:var(--gm);display:block;}
+.stat-item .sl{font-size:10px;color:var(--g5);text-transform:uppercase;}
+.rep-row{display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid var(--g2);font-size:13px;}
+.rep-row:last-child{border-bottom:none;}
+.rep-row .rn{font-weight:700;color:var(--g8);}
+.rep-row .rv{color:var(--g5);}
+.tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;margin-left:6px;}
+.tag.p{background:#e8f5e9;color:#2e7d32;}.tag.a{background:var(--rl);color:var(--rd);}
+.tag.sup{background:var(--gp);color:var(--gm);}.tag.mgr{background:var(--bp);color:var(--bm);}
+.tag.adm{background:#fff8e1;color:#f57f17;}
+
+/* ADMIN */
+.admin-row{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;border-bottom:1px solid var(--g2);}
+.admin-row:last-child{border-bottom:none;}
+.admin-info .an{font-size:14px;font-weight:700;color:var(--g8);}
+.admin-info .ar{font-size:11px;color:var(--g5);}
+.toggle-btn{padding:6px 14px;border:none;border-radius:20px;font-family:inherit;
+  font-size:12px;font-weight:700;cursor:pointer;}
+.toggle-btn.active{background:var(--rl);color:var(--rd);}
+.toggle-btn.inactive{background:var(--gp);color:var(--gm);}
+
+/* BUTTONS */
+.rmbtn{background:rgba(255,255,255,0.2);color:white;border:none;border-radius:6px;
+  width:26px;height:26px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.rmbtn:hover{background:var(--rd);}
+.rmbtn2{background:var(--rl);color:var(--rd);border:none;border-radius:6px;
+  width:26px;height:26px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.rmbtn2:hover{background:var(--rd);color:white;}
+.abtn{width:100%;padding:9px;border:2px dashed;border-radius:var(--rs);background:transparent;
+  font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:6px;}
+.ag{border-color:var(--gl);color:var(--gm);}.ag:hover{background:var(--gp);border-style:solid;}
+.ao{border-color:var(--or);color:#bf360c;background:#fff8f0;}.ao:hover{background:var(--ol);border-style:solid;}
+.ac{border-color:#66bb6a;color:#2e7d32;background:#f1f8e9;}.ac:hover{background:#c8e6c9;border-style:solid;}
+.apr{border-color:var(--pu);color:var(--pu);}.apr:hover{background:var(--pl);border-style:solid;}
+
+/* SUMMARY */
+.sumcard{background:linear-gradient(135deg,var(--gd),#0a2318);border-radius:var(--r);
+  padding:14px;margin:10px 10px 0;color:white;box-shadow:0 8px 32px rgba(26,71,49,0.3);}
+.sumtitle{font-size:11px;font-weight:700;color:var(--gg);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;}
+.sg4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;}
+.sg3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.si{background:rgba(255,255,255,0.07);border-radius:10px;padding:8px 4px;text-align:center;}
+.si .val{font-size:18px;font-weight:800;color:var(--gg);display:block;}
+.si .lbl{font-size:10px;color:rgba(255,255,255,0.55);text-transform:uppercase;}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+.chip{background:rgba(168,230,192,0.15);border:1px solid rgba(168,230,192,0.3);
+  color:var(--gg);padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;}
+
+/* SUBMIT */
+.subbtn{display:flex;align-items:center;justify-content:center;gap:8px;
+  width:calc(100% - 20px);margin:10px 10px 0;padding:15px;
+  background:linear-gradient(135deg,var(--gl),var(--gm));color:white;border:none;
+  border-radius:var(--r);font-family:inherit;font-size:16px;font-weight:800;cursor:pointer;
+  box-shadow:0 4px 20px rgba(76,175,120,0.4);transition:all 0.2s;}
+.subbtn:hover{transform:translateY(-2px);}.subbtn:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);
+  background:var(--gd);color:white;padding:12px 22px;border-radius:40px;font-size:13px;
+  font-weight:600;box-shadow:0 8px 32px rgba(0,0,0,0.3);z-index:999;transition:transform 0.3s;
+  white-space:nowrap;max-width:92vw;text-align:center;}
+.toast.show{transform:translateX(-50%) translateY(0);}.toast.error{background:var(--rd);}
+.toast.success{background:var(--gm);}
+
+/* SUCCESS */
+.sucscreen{display:none;position:fixed;inset:0;background:var(--gd);z-index:200;
+  align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:32px;}
+.sucscreen.show{display:flex;}
+.sucico{font-size:72px;margin-bottom:16px;animation:pop 0.5s ease;}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
+.sucscreen h2{color:white;font-size:24px;font-weight:800;margin-bottom:8px;}
+.sucscreen p{color:var(--gg);font-size:14px;margin-bottom:24px;line-height:1.7;white-space:pre-line;}
+.sucbtns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+.nebtn{background:var(--gl);color:white;border:none;border-radius:var(--r);
+  padding:12px 24px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
+.menbtn{background:rgba(255,255,255,0.12);color:white;border:1px solid rgba(255,255,255,0.2);
+  border-radius:var(--r);padding:12px 24px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
+
+/* EXCEL ATTENDANCE TABLE */
+.att-table{width:100%;border-collapse:collapse;font-size:13px;}
+.att-table th{background:var(--gd);color:white;padding:8px 6px;text-align:left;font-size:11px;font-weight:700;white-space:nowrap;}
+.att-table td{padding:6px 4px;border-bottom:1px solid var(--g2);vertical-align:middle;}
+.att-table tr:hover td{background:var(--g1);}
+.att-table tr.row-present td{background:#f1f8f4;}
+.att-table tr.row-half td{background:#fffde7;}
+.att-table tr.row-absent td{background:#fff5f5;}
+.att-table input[type=number]{width:60px;padding:4px 6px;font-size:12px;border:1.5px solid var(--g2);border-radius:6px;text-align:center;}
+.att-table input[type=text]{width:90px;padding:4px 6px;font-size:12px;border:1.5px solid var(--g2);border-radius:6px;}
+.st-btn{padding:3px 7px;border:1.5px solid var(--g2);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;background:white;transition:all 0.15s;margin:1px;}
+.st-btn.sp{border-color:var(--gl);background:var(--gl);color:white;}
+.st-btn.sh{border-color:#ffa726;background:#ffa726;color:white;}
+.st-btn.sa{border-color:var(--rd);background:var(--rd);color:white;}
+.att-total-row{background:var(--gd)!important;color:white;font-weight:700;}
+.att-total-row td{color:white!important;border:none!important;}
+
+
+.exp-toggle{cursor:pointer;}
+.exp-toggle:hover{background:var(--gp)!important;}
+.exp-arrow{display:inline-block;transition:transform 0.2s;margin-right:4px;color:var(--gm);font-weight:800;}
+.exp-row{display:none;background:#fafdfb;}
+.exp-row.show{display:table-row;}
+.exp-row.show + tr .exp-arrow, tr.exp-open .exp-arrow{transform:rotate(90deg);}
+.exp-inner{padding:8px;}
+.exp-inner table{width:100%;font-size:12px;}
+.exp-inner th{background:var(--gp)!important;color:var(--gm)!important;}
+</style>
+</head>
+<body>
+
+<!-- ════ LOGIN ════ -->
+<div class="screen" id="loginScreen" style="display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#1a4731,#0a2318);">
+  <div class="lbox">
+    <div class="llogo">🌱</div>
+    <div class="ltitle">TGH Nursery</div>
+    <div class="lsub">Tirupati Green House Nursery, Bafalgaon</div>
+    <div class="linfo" id="loadInfo">⏳ Loading...</div>
+    <div class="fr"><label>👷 Apna Naam Chunein</label>
+      <select id="loginName"><option value="">-- Naam Chunein --</option></select></div>
+    <div class="fr"><label>🔐 PIN Dalein</label>
+      <input type="password" inputmode="numeric" maxlength="6" class="pin-inp" id="loginPin" placeholder="••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="lbtn" id="loginBtn" onclick="doLogin()">🔓 Login Karein</button>
+    <div class="lerr" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- ════ MENU ════ -->
+<div class="screen" id="menuScreen">
+  <div class="hdr">
+    <div class="htop">
+      <div class="hico" id="menuIco">🌱</div>
+      <h1 id="menuTitle">TGH Nursery <span>Tirupati Green House Nursery, Bafalgaon</span></h1>
+      <div class="dbadge" id="dateTop"></div>
+    </div>
+    <div class="sbar">
+      <span class="sbadge" id="supBadge">👷</span>
+      <button class="logbtn" onclick="doLogout()">↩ Logout</button>
+    </div>
+  </div>
+  <div class="mwrap">
+    <div class="role-banner" id="roleBanner">
+      <div class="rico" id="roleIco">👷</div>
+      <div class="rtext"><h3 id="roleTitle">Supervisor</h3><p id="roleDesc">Kaam ki entry karo</p></div>
+    </div>
+
+    <!-- Supervisor Menu -->
+    <div id="supMenu">
+      <div class="msec-title">🌅 Subah Ka Kaam</div>
+      <div class="mgrid">
+        <div class="mcard assign" onclick="openMod('assign')">
+          <div class="ico">📋</div><div class="ttl">Morning Assignment</div>
+          <div class="dsc">Labour kahan kaam karega</div>
+        </div>
+        <div class="mcard soon">
+          <div class="ico">👷</div><div class="ttl">Attendance</div>
+          <div class="dsc">Manager ke paas hai</div>
+          <span class="cbadge">Manager Only</span>
+        </div>
+      </div>
+      <div class="msec-title">📊 Meri Report</div>
+      <div class="mgrid">
+        <div class="mcard report" onclick="openMod('myReport')">
+          <div class="ico">📊</div><div class="ttl">Meri Report</div>
+          <div class="dsc">Meri saari entries — date filter</div>
+        </div>
+      </div>
+      <div class="msec-title">📊 Kaam Ki Entry</div>
+      <div class="mgrid">
+        <div class="mcard seed" onclick="openMod('seed')">
+          <div class="ico">🌱</div><div class="ttl">Seed Sowing</div>
+          <div class="dsc">Variety, PKT, Tray, Labour</div>
+        </div>
+        <div class="mcard water" onclick="openMod('water')">
+          <div class="ico">💧</div><div class="ttl">Watering & Spraying</div>
+          <div class="dsc">Chemical, dose, pump</div>
+        </div>
+        <div class="mcard soon"><div class="ico">🪴</div><div class="ttl">Potting</div><div class="dsc">Pot size, qty</div><span class="cbadge">Jald Aayega</span></div>
+        <div class="mcard soon"><div class="ico">🚚</div><div class="ttl">Dispatch</div><div class="dsc">Party, qty, vehicle</div><span class="cbadge">Jald Aayega</span></div>
+      </div>
+    </div>
+
+    <!-- Manager Menu -->
+    <div id="mgrMenu" style="display:none;">
+      <div class="msec-title">👷 Attendance</div>
+      <div class="mgrid">
+        <div class="mcard attend" onclick="openMod('attend')">
+          <div class="ico">📝</div><div class="ttl">Daily Entry</div>
+          <div class="dsc">Present / Half Day / Absent + OT</div>
+        </div>
+        <div class="mcard report" onclick="openMod('attReport')">
+          <div class="ico">📊</div><div class="ttl">Attendance Report</div>
+          <div class="dsc">Date range + Labour match check</div>
+        </div>
+      </div>
+      <div class="msec-title">📊 Reports</div>
+      <div class="mgrid">
+        <div class="mcard seed" onclick="openMod('seedReport')">
+          <div class="ico">🌱</div><div class="ttl">Seed Sowing Report</div>
+          <div class="dsc">Date range, filter, totals</div>
+        </div>
+        <div class="mcard attend" onclick="openMod('labourReport')">
+          <div class="ico">👷</div><div class="ttl">Labour Report</div>
+          <div class="dsc">Labour-wise kaam summary</div>
+        </div>
+      </div>
+
+      <div class="msec-title">🔄 Operations</div>
+      <div class="mgrid">
+        <div class="mcard entry" onclick="openShiftingForm()">
+          <div class="ico">🔄</div><div class="ttl">Shifting</div>
+          <div class="dsc">Labour shifting records</div>
+        </div>
+        <div class="mcard entry" onclick="openDispatchForm()">
+          <div class="ico">🚚</div><div class="ttl">Dispatch</div>
+          <div class="dsc">Vehicle dispatch records</div>
+        </div>
+      </div>
+
+      <div class="msec-title">📋 My Records</div>
+      <div class="mgrid">
+        <div class="mcard report" onclick="openShiftingReport()">
+          <div class="ico">📊</div><div class="ttl">Shifting Report</div>
+          <div class="dsc">Meri shifting records</div>
+        </div>
+        <div class="mcard report" onclick="openDispatchReport()">
+          <div class="ico">📊</div><div class="ttl">Dispatch Report</div>
+          <div class="dsc">Meri dispatch records</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Menu -->
+    <div id="adminMenu" style="display:none;">
+      <div class="msec-title">📊 Reports</div>
+      <div class="mgrid">
+        <div class="mcard report" onclick="openMod('report')">
+          <div class="ico">📈</div><div class="ttl">Daily Report</div>
+          <div class="dsc">Aaj ka poora kaam</div>
+        </div>
+        <div class="mcard attend" onclick="openMod('attend')">
+          <div class="ico">👷</div><div class="ttl">Attendance Entry</div>
+          <div class="dsc">Present/Absent/Half Day</div>
+        </div>
+        <div class="mcard attend" onclick="openMod('attReport')">
+          <div class="ico">👥</div><div class="ttl">Attendance Report</div>
+          <div class="dsc">Labour match check</div>
+        </div>
+      </div>
+      <div class="msec-title">⚙️ Admin Controls</div>
+      <div class="mgrid">
+        <div class="mcard admin-c" onclick="openMod('adminUsers')">
+          <div class="ico">👑</div><div class="ttl">User Management</div>
+          <div class="dsc">Supervisor add/remove</div>
+        </div>
+        <div class="mcard admin-c" onclick="openMod('adminLabour')">
+          <div class="ico">👷</div><div class="ttl">Labour Master</div>
+          <div class="dsc">Labour list manage karo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MORNING ASSIGNMENT ════ -->
+<div class="screen" id="assignScreen">
+  <div class="hdr">
+    <div class="htop"><div class="hico" style="background:#ff8a65;">📋</div>
+      <h1>Morning Assignment <span>Kaun kahan kaam karega</span></h1>
+      <div class="dbadge" id="asBadge"></div></div>
+    <div class="sbar"><span class="sbadge supervisor" id="asSupB">👷</span>
+      <button class="backbtn" onclick="goMenu()">← Menu</button></div>
+  </div>
+  <div class="wrap">
+    <div class="card">
+      <div class="ctitle orange">Basic Jaankari</div>
+      <div class="g2">
+        <div><label>📅 Date</label><input type="date" id="asDate"></div>
+        <div><label>👷 Supervisor</label><select id="asSup"><option value="">-- Select --</option></select></div>
+      </div>
+      <div class="fr"><label>📍 Area/Zone</label>
+        <select id="asArea"><option value="">-- Select --</option>
+          <option>Saraswati</option><option>Kedar</option><option>Onkar</option>
+          <option>Godavari</option><option>Brahmputra</option><option>NH</option>
+        </select></div>
+    </div>
+    <div class="card">
+      <div class="ctitle orange">Kaam + Labour Assignment</div>
+      <div id="assignCon"></div>
+      <button class="abtn ao" onclick="addAssignKaam()">➕ Nayi Kaam Category Add Karo</button>
+    </div>
+    <div class="sumcard">
+      <div class="sumtitle">📊 Today's Assignment Summary</div>
+      <div class="sg3">
+        <div class="si"><span class="val" id="asSmK">0</span><div class="lbl">Kaam Types</div></div>
+        <div class="si"><span class="val" id="asSmL">0</span><div class="lbl">Total Labour</div></div>
+        <div class="si"><span class="val" id="asSmU">0</span><div class="lbl">Unique Labour</div></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:10px;">
+      <div class="ctitle orange">📝 Remarks</div>
+      <textarea id="asRem" rows="2" placeholder="Koi khaas baat..."></textarea>
+    </div>
+    <button class="subbtn" id="asSub" onclick="submitAssign()" style="background:linear-gradient(135deg,#ff8a65,#e65100);">📋 Assignment Save Karo</button>
+  </div>
+</div>
+
+<!-- ════ ATTENDANCE ════ -->
+<div class="screen" id="attendScreen">
+  <div class="hdr">
+    <div class="htop"><div class="hico" style="background:#ffb74d;">👷</div>
+      <h1>Attendance <span>Present / Absent Entry</span></h1>
+      <div class="dbadge" id="attBadge"></div></div>
+    <div class="sbar"><span class="sbadge supervisor" id="attSupB">👷</span>
+      <button class="backbtn" onclick="goMenu()">← Menu</button></div>
+  </div>
+  <div class="wrap">
+    <div class="card">
+      <div class="ctitle orange">Basic Jaankari</div>
+      <div class="fr">
+        <label>📅 Date</label>
+        <input type="date" id="attDate">
+      </div>
+      <input type="hidden" id="attSup">
+      <input type="hidden" id="attArea" value="">
+      <input type="hidden" id="attKaam" value="Daily Attendance">
+      <div style="background:var(--gp);border-radius:10px;padding:8px 12px;font-size:13px;font-weight:700;color:var(--gm);">
+        👔 Entry by: <span id="attSupShow"></span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ctitle orange">👷 Labour List</div>
+      <div class="fr">
+        <div class="labour-search-wrap">
+          <div class="labour-dropdown" style="flex:1;position:relative;">
+            <input type="text" id="attSearch" placeholder="Labour naam type karo ya dhundho..." oninput="filterAttLabour()" onfocus="showAttDrop()" onblur="setTimeout(hideAttDrop,200)">
+            <div class="ldrop-list" id="attDropList"></div>
+          </div>
+          <button onclick="addCustomLabour()" style="background:var(--or);color:white;border:none;border-radius:var(--rs);padding:9px 14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">+ Naya</button>
+        </div>
+      </div>
+      <div id="attList"></div>
+    </div>
+    <div class="sumcard">
+      <div class="sumtitle">📊 Live Summary</div>
+      <div class="sg3">
+        <div class="si"><span class="val" id="attSmP">0</span><div class="lbl">Present</div></div>
+        <div class="si"><span class="val" id="attSmA">0</span><div class="lbl">Absent</div></div>
+        <div class="si"><span class="val" id="attSmH">₹0</span><div class="lbl">Total Wage</div></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:10px;"><div class="ctitle orange">📝 Remarks</div>
+      <textarea id="attRem" rows="2" placeholder="Koi khaas baat..."></textarea></div>
+    <button class="subbtn" id="attSub" onclick="submitAttend()" style="background:linear-gradient(135deg,#ffb74d,#e65100);">✅ Attendance Save Karo</button>
+  </div>
+</div>
+
+<!-- ════ SEED SOWING ════ -->
+<div class="screen" id="seedScreen">
+  <div class="hdr">
+    <div class="htop"><div class="hico" style="background:var(--gl);">🌱</div>
+      <h1>Seed Sowing <span>Labour Tracking</span></h1><div class="dbadge" id="sBadge"></div></div>
+    <div class="sbar"><span class="sbadge supervisor" id="sSupB">👷</span>
+      <button class="backbtn" onclick="goMenu()">← Menu</button></div>
+  </div>
+  <div class="wrap">
+    <div class="card">
+      <div class="ctitle">Basic Jaankari</div>
+      <div class="g2">
+        <div><label>📅 Date</label><input type="date" id="sDate"></div>
+        <div><label>👷 Supervisor</label>
+          <input type="text" id="sSupName" readonly style="background:#e8f5ee;font-weight:700;color:var(--gm);">
+          <input type="hidden" id="sSup"></div>
+      </div>
+      <div class="g2">
+        <div><label>📍 Area</label>
+          <select id="sArea"><option value="">-- Select --</option>
+            <option>Saraswati</option><option>Kedar</option><option>Onkar</option>
+            <option>Godavari</option><option>Brahmputra</option><option>NH</option>
+          </select></div>
+        <div><label>⏰ Shift</label>
+          <select id="sShift"><option>Full Day</option><option>Half Day</option></select></div>
+      </div>
+    </div>
+    <div class="card"><div class="ctitle">Variety + Labour Entry</div>
+      <div id="vCon"></div>
+      <button class="abtn ag" onclick="addV()">➕ Nayi Variety Add Karo</button></div>
+    <div class="sumcard">
+      <div class="sumtitle">📊 Live Summary</div>
+      <div class="sg4">
+        <div class="si"><span class="val" id="smV">0</span><div class="lbl">Varieties</div></div>
+        <div class="si"><span class="val" id="smP">0</span><div class="lbl">Plants</div></div>
+        <div class="si"><span class="val" id="smL">0</span><div class="lbl">Labour</div></div>
+        <div class="si"><span class="val" id="smPk">0</span><div class="lbl">Pkts</div></div>
+      </div>
+      <div id="chipRow" class="chips"></div>
+    </div>
+    <div class="card" style="margin-top:10px;"><div class="ctitle">📝 Remarks</div>
+      <textarea id="sRem" rows="2" placeholder="Koi khaas baat..."></textarea></div>
+    <button class="subbtn" id="sSub" onclick="submitSeed()">✅ Entry Save Karo</button>
+  </div>
+</div>
+
+<!-- ════ WATERING ════ -->
+<div class="screen" id="waterScreen">
+  <div class="hdr">
+    <div class="htop"><div class="hico" style="background:var(--bl);">💧</div>
+      <h1>Watering & Spraying <span>Labour Tracking</span></h1><div class="dbadge" id="wBadge"></div></div>
+    <div class="sbar"><span class="sbadge supervisor" id="wSupB">👷</span>
+      <button class="backbtn" onclick="goMenu()">← Menu</button></div>
+  </div>
+  <div class="wrap">
+    <div class="card">
+      <div class="ctitle blue">Basic Jaankari</div>
+      <div class="g2">
+        <div><label>📅 Date</label><input type="date" id="wDate"></div>
+        <div><label>👷 Supervisor</label><select id="wSup"><option value="">-- Select --</option></select></div>
+      </div>
+      <div class="g2">
+        <div><label>📍 Area</label>
+          <select id="wArea"><option value="">-- Select --</option>
+            <option>Saraswati</option><option>Kedar</option><option>Onkar</option>
+            <option>Godavari</option><option>Brahmputra</option><option>NH</option>
+          </select></div>
+        <div><label>⏰ Shift</label>
+          <select id="wShift"><option>Subah (6am-2pm)</option><option>Dopahar (2pm-10pm)</option><option>Full Day</option></select></div>
+      </div>
+      <div class="g2">
+        <div><label>🕐 Start Time</label><input type="time" id="wST"></div>
+        <div><label>🕐 End Time</label><input type="time" id="wET"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ctitle blue">Kaam Ka Type</div>
+      <div class="ttog">
+        <button class="tbtn aw" id="btnW" onclick="setWT('water')">💧 Watering</button>
+        <button class="tbtn" id="btnS" onclick="setWT('spray')">🌿 Spraying</button>
+      </div>
+      <input type="hidden" id="wKT" value="water">
+      <div class="watsec" id="watSec">
+        <span class="ipill">💧 Seedhi paani se sijaai</span>
+        <div class="g2">
+          <div><label>🚿 Method</label>
+            <select id="wMeth"><option>Haath se (pipe)</option><option>Drip Irrigation</option><option>Sprinkler</option><option>Watering Can</option><option>Other</option></select></div>
+          <div><label>💦 Pani (litre)</label><input type="number" id="wLitre" placeholder="0" min="0" oninput="updWS()"></div>
+        </div>
+        <div class="fr"><label>🌱 Kaunsi Plants</label><input type="text" id="wPlants" placeholder="e.g. Mirchi, Bengan"></div>
+      </div>
+      <div class="wsec" id="spraySec">
+        <span class="ipill">🌿 Chemical/Fertilizer spraying</span>
+        <div class="g2">
+          <div><label>🔫 Sprayer</label>
+            <select id="spType"><option>Haath wala pump</option><option>Power sprayer</option><option>Dono</option></select></div>
+          <div><label>🔢 Pump Count</label><input type="number" id="pCnt" placeholder="0" min="0" oninput="updWS()"></div>
+        </div>
+        <div class="g2">
+          <div><label>💧 Pani/Pump (L)</label><input type="number" id="wPP" placeholder="16" min="0" oninput="updWS()"></div>
+          <div><label>🌱 Area Covered</label><input type="text" id="aCov" placeholder="Zone A, GH-1"></div>
+        </div>
+        <div class="ctitle" style="margin-top:4px;">🧪 Chemicals</div>
+        <div id="cCon"></div>
+        <button class="abtn ac" onclick="addC()">➕ Chemical Add Karo</button>
+      </div>
+    </div>
+    <div class="card"><div class="ctitle blue">👷 Labour Details</div>
+      <div id="wlCon"></div>
+      <button class="abtn ao" onclick="addWL()">➕ Labour Add Karo</button></div>
+    <div class="sumcard">
+      <div class="sumtitle">📊 Live Summary</div>
+      <div class="sg3">
+        <div class="si"><span class="val" id="wsmL">0</span><div class="lbl">Labour</div></div>
+        <div class="si"><span class="val" id="wsmPu">—</span><div class="lbl">Pumps</div></div>
+        <div class="si"><span class="val" id="wsmW">0L</span><div class="lbl">Pani</div></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:10px;"><div class="ctitle blue">📝 Remarks</div>
+      <textarea id="wRem" rows="2" placeholder="Koi khaas baat..."></textarea></div>
+    <button class="subbtn" id="wSub" onclick="submitWater()" style="background:linear-gradient(135deg,var(--bl),var(--bm));">✅ Entry Save Karo</button>
+  </div>
+</div>
+
+<!-- ════ REPORT ════ -->
+<div class="screen" id="reportScreen">
+  <div class="hdr">
+    <div class="htop"><div class="hico" style="background:var(--pu);">📊</div>
+      <h1 id="repTitle">Reports <span>Data Overview</span></h1><div class="dbadge" id="repBadge"></div></div>
+    <div class="sbar"><span class="sbadge manager" id="repSupB">👔</span>
+      <button class="backbtn" onclick="goMenu()">← Menu</button></div>
+  </div>
+  <div class="wrap">
+    <div class="card">
+      <div class="ctitle purple">📅 Date Filter</div>
+      <div class="g2">
+        <div><label>From Date</label><input type="date" id="repFrom"></div>
+        <div><label>To Date</label><input type="date" id="repTo"></div>
+      </div>
+      <button id="repBtn" onclick="repBtnClick()" style="width:100%;padding:10px;background:var(--pu);color:white;border:none;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;">🔍 Report Dekho</button>
+    </div>
+    <div id="reportContent"></div>
+  </div>
+</div>
+
+<!-- ════ ADMIN ════ -->
+<div class="screen" id="adminScreen">
+  <div class="hdr">
+    <div class="htop"><div class="hico" style="background:#f9a825;">👑</div>
+      <h1>Admin Panel <span>User Management</span></h1></div>
+    <div class="sbar"><span class="sbadge adm" id="adminSupB">👑 Admin</span>
+      <button class="backbtn" onclick="goMenu()">← Menu</button></div>
+  </div>
+  <div class="wrap">
+    <div class="card">
+      <div class="ctitle" style="color:#f57f17;">👥 Sabhi Users</div>
+      <div id="userList"></div>
+    </div>
+    <div class="card" style="margin-top:10px;">
+      <div class="ctitle" style="color:#f57f17;">➕ Naya User Add Karo</div>
+      <div class="fr"><label>👤 Naam</label><input type="text" id="newUserName" placeholder="Supervisor ka naam..."></div>
+      <div class="g2">
+        <div><label>🔐 PIN</label><input type="number" id="newUserPin" placeholder="4-6 digit PIN"></div>
+        <div><label>🎭 Role</label>
+          <select id="newUserRole">
+            <option>Supervisor</option><option>Manager</option><option>Admin</option>
+          </select></div>
+      </div>
+      <button onclick="addUser()" style="width:100%;padding:10px;background:#f9a825;color:white;border:none;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;">➕ User Add Karo</button>
+    </div>
+  </div>
+</div>
+
+<!-- SEED SOWING REPORT -->
+<div class="screen" id="seedReportScreen">
+  <div class="hdr">
+    <div class="htop"><div class="hico" style="background:var(--gl);">📊</div>
+      <h1>Seed Sowing Report <span>Filter + Totals</span></h1></div>
+    <div class="sbar"><span class="sbadge manager" id="srSupB">👔</span>
+      <button class="backbtn" onclick="goMenu()">← Menu</button></div>
+  </div>
+  <div class="wrap">
+    <div class="card">
+      <div class="ctitle">🔍 Filters</div>
+      <div class="g2">
+        <div><label>📅 From Date</label><input type="date" id="srFrom"></div>
+        <div><label>📅 To Date</label><input type="date" id="srTo"></div>
+      </div>
+      <div class="g2">
+        <div><label>👷 Supervisor</label>
+          <select id="srSup">
+            <option value="">-- Sab Supervisors --</option>
+          </select></div>
+        <div><label>🥬 Vegetable</label>
+          <select id="srVeg">
+            <option value="">-- Sab Vegetables --</option>
+          </select></div>
+      </div>
+      <div class="g2">
+        <div><label>📍 Area</label>
+          <select id="srArea">
+            <option value="">-- Sab Areas --</option>
+            <option>Saraswati</option><option>Kedar</option><option>Onkar</option>
+            <option>Godavari</option><option>Brahmputra</option><option>NH</option>
+          </select></div>
+        <div><label>🌱 Variety</label>
+          <input type="text" id="srVariety" placeholder="Variety naam..."></div>
+      </div>
+      <button onclick="loadSeedReport()" style="width:100%;padding:11px;background:var(--gm);color:white;border:none;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px;">🔍 Report Dekho</button>
+    </div>
+    <div id="seedReportContent"></div>
+  </div>
+</div>
+
+<!-- MY REPORT (Supervisor) -->
+<div class="screen" id="myReportScreen">
+  <div class="hdr">
+    <div class="htop"><div class="hico" style="background:var(--gl);">📊</div>
+      <h1>Meri Report <span id="mrSupName">Supervisor</span></h1></div>
+    <div class="sbar"><span class="sbadge supervisor" id="mrSupB">👷</span>
+      <button class="backbtn" onclick="goMenu()">← Menu</button></div>
+  </div>
+  <div class="wrap">
+    <div class="card">
+      <div class="ctitle">🔍 Filters</div>
+      <div class="g2">
+        <div><label>📅 From Date</label><input type="date" id="mrFrom"></div>
+        <div><label>📅 To Date</label><input type="date" id="mrTo"></div>
+      </div>
+      <div class="g2">
+        <div><label>📊 Work Type</label>
+          <select id="mrWorkType">
+            <option value="">-- Sab Work Types --</option>
+            <option value="assign">📋 Morning Assignment</option>
+            <option value="seed">🌱 Seed Sowing</option>
+            <option value="water">💧 Watering</option>
+            <option value="spray">🌿 Spraying</option>
+          </select></div>
+        <div><label>🥬 Vegetable</label>
+          <select id="mrVeg"><option value="">-- Sab Vegetables --</option></select></div>
+      </div>
+      <div class="g2">
+        <div><label>📍 Area</label>
+          <select id="mrArea">
+            <option value="">-- Sab Areas --</option>
+            <option>Saraswati</option><option>Kedar</option><option>Onkar</option>
+            <option>Godavari</option><option>Brahmputra</option><option>NH</option>
+          </select></div>
+      </div>
+      <div class="fr">
+        <label>🌱 Variety</label>
+        <input type="text" id="mrVariety" placeholder="Variety naam...">
+      </div>
+      <button onclick="loadMyReport()" style="width:100%;padding:11px;background:var(--gm);color:white;border:none;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px;">🔍 Report Dekho</button>
+    </div>
+    <div id="myReportContent"></div>
+  </div>
+</div>
+
+<!-- LABOUR REPORT -->
+<div class="screen" id="labourReportScreen">
+  <div class="hdr">
+    <div class="htop"><div class="hico" style="background:#ffb74d;">👷</div>
+      <h1>Labour Report <span>Date range + Labour-wise</span></h1></div>
+    <div class="sbar"><span class="sbadge manager" id="lrSupB">👔</span>
+      <button class="backbtn" onclick="goMenu()">← Menu</button></div>
+  </div>
+  <div class="wrap">
+    <div class="card">
+      <div class="ctitle orange">🔍 Filters</div>
+      <div class="g2">
+        <div><label>📅 From Date</label><input type="date" id="lrFrom"></div>
+        <div><label>📅 To Date</label><input type="date" id="lrTo"></div>
+      </div>
+      <div class="fr">
+        <label>👤 Labour Naam (Optional)</label>
+        <select id="lrLabour"><option value="">-- Sab Labour --</option></select>
+      </div>
+      <button onclick="loadLabourReport()" style="width:100%;padding:11px;background:#f57c00;color:white;border:none;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px;">🔍 Report Dekho</button>
+    </div>
+    <div id="labourReportContent"></div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="sucscreen" id="sucScreen">
+  <div class="sucico" id="sucIco">✅</div>
+  <h2>Save Ho Gayi!</h2>
+  <p id="sucMsg"></p>
+  <div class="sucbtns">
+    <button class="nebtn" onclick="newEntry()">+ Nayi Entry</button>
+    <button class="menbtn" onclick="goMenuS()">🏠 Menu</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- SHIFTING FORM SCREEN -->
+<div class="screen" id="shiftingScreen">
+  <div class="hdr">
+    <div class="htop"><div class="hico" style="background:var(--or);">🔄</div>
+      <h1>Shifting</h1></div>
+    <div class="sbar">
+      <button class="backbtn" onclick="goMenu()">← Menu</button></div>
+  </div>
+  <div class="wrap">
+    <div class="card">
+      <div class="ctitle">📋 Shifting Form</div>
+      
+      <div class="g2">
+        <div><label>📅 Date</label><input type="date" id="shDate"></div>
+        <div><label>👤 Supervisor</label><input type="text" id="shSup" readonly style="background:var(--g1);"></div>
+      </div>
+      
+      <div class="g2">
+        <div><label>📍 Area</label>
+          <select id="shArea">
+            <option value="">-- Select Area --</option>
+          </select></div>
+        <div><label>🥬 Crop</label>
+          <select id="shCrop">
+            <option value="">-- Select Crop --</option>
+          </select></div>
+      </div>
+      
+      <div class="fr">
+        <label>🌱 Variety</label>
+        <select id="shVariety">
+          <option value="">-- Select Variety --</option>
+        </select>
+      </div>
+
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--g2);">
+        <div class="ctitle" style="font-size:14px;margin-bottom:12px;">👥 Add Labour</div>
+        
+        <div class="g2">
+          <div><label>Labour</label>
+            <select id="shLabour">
+              <option value="">-- Select Labour --</option>
+            </select></div>
+          <div><label>Tray Count</label>
+            <input type="number" id="shTray" placeholder="0" min="0" step="1" style="width:100%;"></div>
+        </div>
+        
+        <button onclick="addShiftingLabour()" style="width:100%;padding:10px;background:var(--gl);color:white;border:none;border-radius:var(--rs);font-family:inherit;font-weight:700;cursor:pointer;margin-top:8px;">➕ Add Labour</button>
+      </div>
+
+      <div id="shLabourList" style="margin-top:16px;padding:12px;background:var(--gp);border-radius:var(--rs);min-height:40px;">
+        <div style="color:var(--g5);font-size:13px;text-align:center;">Koi labour add nahi hua</div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:16px;">
+        <button onclick="submitShifting()" style="flex:1;padding:12px;background:var(--gm);color:white;border:none;border-radius:var(--rs);font-family:inherit;font-weight:700;cursor:pointer;">💾 Save</button>
+        <button onclick="resetShifting()" style="flex:1;padding:12px;background:var(--g2);color:var(--g8);border:none;border-radius:var(--rs);font-family:inherit;font-weight:700;cursor:pointer;">🔄 Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SHIFTING REPORT SCREEN -->
+<div class="screen" id="shiftingReportScreen">
+  <div class="hdr">
+    <div class="htop"><div class="hico" style="background:var(--or);">📊</div>
+      <h1>Shifting Report</h1></div>
+    <div class="sbar">
+      <button class="backbtn" onclick="goMenu()">← Menu</button></div>
+  </div>
+  <div class="wrap">
+    <div class="card">
+      <div class="ctitle">🔍 Filters</div>
+      <div class="g2">
+        <div><label>📅 From Date</label><input type="date" id="srFrom"></div>
+        <div><label>📅 To Date</label><input type="date" id="srTo"></div>
+      </div>
+      <div class="g2">
+        <div><label>📍 Area</label>
+          <select id="srArea">
+            <option value="">-- Sab Areas --</option>
+          </select></div>
+        <div><label>🥬 Crop</label>
+          <select id="srCrop">
+            <option value="">-- Sab Crops --</option>
+          </select></div>
+      </div>
+      <button onclick="loadShiftingReport()" style="width:100%;padding:11px;background:var(--gm);color:white;border:none;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px;">🔍 Report Dekho</button>
+    </div>
+    <div id="shiftingReportContent"></div>
+  </div>
+</div>
+
+<!-- DISPATCH FORM SCREEN -->
+<div class="screen" id="dispatchScreen">
+  <div class="hdr">
+    <div class="htop"><div class="hico" style="background:var(--gl);">🚚</div>
+      <h1>Dispatch</h1></div>
+    <div class="sbar">
+      <button class="backbtn" onclick="goMenu()">← Menu</button></div>
+  </div>
+  <div class="wrap">
+    <div class="card">
+      <div class="ctitle">📦 Vehicle Header</div>
+      
+      <div class="g2">
+        <div><label>📅 Date</label><input type="date" id="dpDate"></div>
+        <div><label>📍 Area</label>
+          <select id="dpArea">
+            <option value="">-- Select Area --</option>
+          </select></div>
+      </div>
+      
+      <div class="g2">
+        <div><label>👤 Supervisor</label><input type="text" id="dpSup" readonly style="background:var(--g1);"></div>
+        <div><label>🚙 Gaadi No</label>
+          <input type="text" id="dpGaadi" placeholder="Vehicle number"></div>
+      </div>
+      
+      <div class="g2">
+        <div><label>👨 Driver</label>
+          <input type="text" id="dpDriver" placeholder="Driver name"></div>
+        <div><label>📊 Meter Reading</label>
+          <input type="number" id="dpMeter" placeholder="0" min="0" step="0.1"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ctitle">🌱 Add Crop/Farmer Entry</div>
+      
+      <div class="g2">
+        <div><label>👨 Farmer</label>
+          <input type="text" id="dpFarmer" placeholder="Farmer name"></div>
+        <div><label>🥬 Crop</label>
+          <select id="dpCrop">
+            <option value="">-- Select Crop --</option>
+          </select></div>
+      </div>
+      
+      <div class="g2">
+        <div><label>🌱 Variety</label>
+          <select id="dpVariety">
+            <option value="">-- Select Variety --</option>
+          </select></div>
+        <div><label>📦 Carret</label>
+          <input type="number" id="dpCarret" placeholder="0" min="0" step="1"></div>
+      </div>
+      
+      <div class="g2">
+        <div><label>🌿 Plant Per Carret</label>
+          <input type="number" id="dpPPC" placeholder="0" min="0" step="1"></div>
+        <div><label>🌱 Direct Plants</label>
+          <input type="number" id="dpDirect" placeholder="0" min="0" step="1"></div>
+      </div>
+      
+      <div class="fr">
+        <label>📅 Date of Sowing (Mandatory)</label>
+        <input type="date" id="dpSowingDate" required style="width:100%;"></div>
+      
+      <div id="dpValidationMsg" style="padding:8px;margin-top:8px;border-radius:var(--rs);display:none;font-size:13px;font-weight:600;"></div>
+      
+      <div class="fr">
+        <label>📝 Remarks (Optional)</label>
+        <textarea id="dpRemarks" placeholder="Kuch special note..." style="width:100%;padding:8px;border:1px solid var(--g2);border-radius:var(--rs);font-family:inherit;resize:vertical;min-height:50px;"></textarea>
+      </div>
+      
+      <button onclick="addDispatchEntry()" style="width:100%;padding:10px;background:var(--gl);color:white;border:none;border-radius:var(--rs);font-family:inherit;font-weight:700;cursor:pointer;margin-top:8px;">➕ Add Entry</button>
+    </div>
+
+    <div class="card">
+      <div class="ctitle">📋 Added Entries</div>
+      <div id="dpEntryList" style="display:flex;flex-direction:column;gap:8px;min-height:40px;">
+        <div style="color:var(--g5);font-size:13px;text-align:center;">Koi entry add nahi hua</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;gap:8px;">
+        <button onclick="submitDispatch()" style="flex:1;padding:12px;background:var(--gm);color:white;border:none;border-radius:var(--rs);font-family:inherit;font-weight:700;cursor:pointer;">💾 Save</button>
+        <button onclick="resetDispatch()" style="flex:1;padding:12px;background:var(--g2);color:var(--g8);border:none;border-radius:var(--rs);font-family:inherit;font-weight:700;cursor:pointer;">🔄 Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DISPATCH REPORT SCREEN -->
+<div class="screen" id="dispatchReportScreen">
+  <div class="hdr">
+    <div class="htop"><div class="hico" style="background:var(--gl);">📊</div>
+      <h1>Dispatch Report</h1></div>
+    <div class="sbar">
+      <button class="backbtn" onclick="goMenu()">← Menu</button></div>
+  </div>
+  <div class="wrap">
+    <div class="card">
+      <div class="ctitle">🔍 Filters</div>
+      <div class="g2">
+        <div><label>📅 From Date</label><input type="date" id="drFrom"></div>
+        <div><label>📅 To Date</label><input type="date" id="drTo"></div>
+      </div>
+      <div class="g2">
+        <div><label>📍 Area</label>
+          <select id="drArea">
+            <option value="">-- Sab Areas --</option>
+          </select></div>
+        <div><label>🚙 Gaadi No</label>
+          <input type="text" id="drGaadi" placeholder="Filter by vehicle"></div>
+      </div>
+      <button onclick="loadDispatchReport()" style="width:100%;padding:11px;background:var(--gm);color:white;border:none;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px;">🔍 Report Dekho</button>
+    </div>
+    <div id="dispatchReportContent"></div>
+  </div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbzgkFwlPS-w_tdipv8CX5LVbj8oG1KJFQt1KKktE7Gfd1zd2BdgkFtCOsUfbY4LwOZrdQ/exec';
+const SHEET_ID = '1Nv8FzgMKno4idg7y8OtiQ5QV0OhlsHNTfk9gn4rBVwM';
+
+let SUP_DATA = {}; // {name: {pin, role}}
+let LABOUR_LIST = []; // [{name, wage}]
+let VDATA = {};
+let curUser = null; // {name, role}
+let curMod = null;
+let vCnt=0, lCnt={}, cCnt=0, wlCnt=0, akCnt=0;
+let akLabours = {}; // {akid: [names]}
+
+// ════ INIT ════
+window.onload = () => {
+  const t = new Date();
+  const iso = t.toISOString().split('T')[0];
+  const fmt = t.toLocaleDateString('hi-IN',{weekday:'short',day:'numeric',month:'short'});
+  ['dateTop','asBadge','attBadge','sBadge','wBadge','repBadge'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.textContent=fmt;
+  });
+  ['asDate','attDate','sDate','wDate','repFrom','repTo'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value=iso;
+  });
+  const now = t.toTimeString().slice(0,5);
+  if(document.getElementById('wST')) document.getElementById('wST').value=now;
+  loadAll();
+};
+
+// ════ SHOW SCREEN ════
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s=>{s.style.display='none';});
+  const el = document.getElementById(id);
+  if(id==='loginScreen') el.style.display='flex';
+  else el.style.display='block';
+  window.scrollTo(0,0);
+}
+
+// ════ LOAD DATA ════
+function loadAll() {
+  // Load Supervisors
+  fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Supervisors')
+    .then(r=>r.text()).then(txt=>{
+      try {
+        const json=JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+        SUP_DATA={};
+        const names=[];
+        json.table.rows.forEach(row=>{
+          if(!row.c[0]||!row.c[0].v) return;
+          const nm=row.c[0].v.toString().trim();
+          // Skip header row
+          if(nm==='Supervisor Naam'||nm==='Naam'||nm==='Name') return;
+          const pin=row.c[1]?row.c[1].v.toString().trim():'';
+          const st=row.c[2]?row.c[2].v.toString().trim().toLowerCase():'active';
+          const role=row.c[3]?row.c[3].v.toString().trim():'Supervisor';
+          if(nm && st==='active'){
+            SUP_DATA[nm]={pin,role};
+            names.push(nm);
+          }
+        });
+        const sel=document.getElementById('loginName');
+        sel.innerHTML='<option value="">-- Naam Chunein --</option>';
+        names.forEach(n=>sel.innerHTML+='<option value="'+n+'">'+n+'</option>');
+        document.getElementById('loadInfo').textContent='✅ '+names.length+' users ready!';
+        setTimeout(()=>{document.getElementById('loadInfo').style.display='none';},2000);
+      } catch(e){document.getElementById('loadInfo').textContent='⚠️ Load error!';}
+    }).catch(()=>{document.getElementById('loadInfo').textContent='⚠️ Network error!';});
+
+  // Load Master List
+  fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Master%20List')
+    .then(r=>r.text()).then(txt=>{
+      try {
+        const json=JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+        VDATA={};
+        json.table.rows.forEach(row=>{
+          if(!row.c[0]||!row.c[0].v) return;
+          const veg=row.c[0].v.toString().trim();
+          // Skip header
+          if(veg==='Vegetable'||veg==='vegetable') return;
+          const variety=row.c[1]?row.c[1].v.toString().trim():'';
+          if(veg&&variety){if(!VDATA[veg])VDATA[veg]=[];if(VDATA[veg].indexOf(variety)===-1)VDATA[veg].push(variety);}
+        });
+      } catch(e){}
+    }).catch(()=>{});
+
+  // Load Labour Master
+  fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Labour%20Master')
+    .then(r=>r.text()).then(txt=>{
+      try {
+        const json=JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+        LABOUR_LIST=[];
+        json.table.rows.forEach(row=>{
+          if(!row.c[0]||!row.c[0].v) return;
+          const nm=row.c[0].v.toString().trim();
+          // Skip header
+          if(nm==='Labour Naam'||nm==='Naam'||nm==='Name') return;
+          LABOUR_LIST.push({name:nm, wage:row.c[1]?parseFloat(row.c[1].v)||0:0});
+        });
+      } catch(e){}
+    }).catch(()=>{});
+}
+
+// ════ LOGIN ════
+function doLogin() {
+  const name=document.getElementById('loginName').value;
+  const pin=document.getElementById('loginPin').value;
+  if(!name){showErr('❗ Pehle apna naam chunein!');return;}
+  if(!pin){showErr('❗ PIN daalna zaroori hai!');return;}
+
+  if(Object.keys(SUP_DATA).length>0) {
+    if(!SUP_DATA[name]){showErr('❌ Supervisor nahi mila!');return;}
+    if(SUP_DATA[name].pin.toString().trim()!==pin.toString().trim()){showErr('❌ Galat PIN!');return;}
+    loginOk(name, SUP_DATA[name].role);
+  } else {
+    // Fallback
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Supervisors')
+      .then(r=>r.text()).then(txt=>{
+        try {
+          const json=JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+          let found=false;
+          json.table.rows.forEach(row=>{
+            if(!row.c[0]||!row.c[0].v) return;
+            const nm=row.c[0].v.toString().trim();
+            // Skip header row
+            if(nm==='Supervisor Naam'||nm==='Naam') return;
+            const p=row.c[1]?row.c[1].v.toString().trim():'';
+            const role=row.c[3]?row.c[3].v.toString().trim():'Supervisor';
+            if(nm===name && p===pin){found=true;loginOk(name,role);}
+          });
+          if(!found) showErr('❌ Galat naam ya PIN!');
+        } catch(e){showErr('⚠️ Error! Dobara try karo.');}
+      });
+  }
+}
+
+function loginOk(name, role) {
+  curUser={name,role};
+  document.getElementById('loginPin').value='';
+  document.getElementById('loginErr').classList.remove('show');
+
+  // Set role badge
+  const badge=document.getElementById('supBadge');
+  badge.className='sbadge '+role.toLowerCase();
+  badge.textContent=(role==='Admin'?'👑':role==='Manager'?'👔':'👷')+' '+name+' ('+role+')';
+
+  // Set role banner
+  const rb=document.getElementById('roleBanner');
+  rb.className='role-banner '+role.toLowerCase();
+  if(role==='Admin'){
+    document.getElementById('roleIco').textContent='👑';
+    document.getElementById('roleTitle').textContent='Admin — '+name;
+    document.getElementById('roleDesc').textContent='Poora system control karo';
+  } else if(role==='Manager'){
+    document.getElementById('roleIco').textContent='👔';
+    document.getElementById('roleTitle').textContent='Manager — '+name;
+    document.getElementById('roleDesc').textContent='Saari reports dekho';
+  } else {
+    document.getElementById('roleIco').textContent='👷';
+    document.getElementById('roleTitle').textContent='Supervisor — '+name;
+    document.getElementById('roleDesc').textContent='Kaam ki entry karo';
+  }
+
+  // Show correct menu
+  document.getElementById('supMenu').style.display = (role==='Supervisor'?'block':'none');
+  document.getElementById('mgrMenu').style.display  = (role==='Manager'?'block':'none');
+  document.getElementById('adminMenu').style.display= (role==='Admin'?'block':'none');
+
+  // Fill supervisor dropdowns
+  const supNames = Object.keys(SUP_DATA).filter(n=>SUP_DATA[n] && SUP_DATA[n].role==='Supervisor');
+  ['asSup','attSup','sSup','wSup'].forEach(id=>{
+    const sel=document.getElementById(id); if(!sel) return;
+    sel.innerHTML='<option value="">-- Select --</option>';
+    supNames.forEach(n=>sel.innerHTML+='<option value="'+n+'">'+n+'</option>');
+    if(role==='Supervisor') setSel(id,name);
+  });
+
+  show('menuScreen');
+}
+
+function showErr(m){const e=document.getElementById('loginErr');e.textContent=m;e.classList.add('show');}
+
+function doLogout(){
+  if(!confirm('Logout karna chahte hain?'))return;
+  curUser=null;
+  document.getElementById('loginPin').value='';
+  document.getElementById('loginName').value='';
+  document.getElementById('loginErr').classList.remove('show');
+  document.getElementById('loadInfo').style.display='block';
+  document.getElementById('loadInfo').textContent='⏳ Loading...';
+  show('loginScreen');
+  loadAll();
+}
+
+function setSel(id,val){
+  const s=document.getElementById(id);
+  if(!s||!s.options||!val) return;
+  for(let i=0;i<s.options.length;i++){
+    if(s.options[i].value===val){s.selectedIndex=i;break;}
+  }
+}
+function goMenu(){show('menuScreen');}
+
+// ════ OPEN MODULE ════
+function openMod(mod) {
+  curMod=mod;
+  if(mod==='myReport') {
+    document.getElementById('mrSupB').textContent='👷 '+curUser.name;
+    document.getElementById('mrSupName').textContent=curUser.name+' ki entries';
+    const mrVeg=document.getElementById('mrVeg');
+    mrVeg.innerHTML='<option value="">-- Sab Vegetables --</option>';
+    Object.keys(VDATA).forEach(v=>mrVeg.innerHTML+='<option value="'+v+'">'+v+'</option>');
+    const t=new Date();
+    document.getElementById('mrTo').value=t.toISOString().split('T')[0];
+    const f=new Date(); f.setDate(f.getDate()-30);
+    document.getElementById('mrFrom').value=f.toISOString().split('T')[0];
+    document.getElementById('myReportContent').innerHTML='';
+    show('myReportScreen');
+  } else if(mod==='assign') {
+    setSel('asSup',curUser.name);
+    document.getElementById('asSupB').textContent='👷 '+curUser.name;
+    if(!document.querySelector('[id^="ak-"]')){akCnt=0;addAssignKaam();}
+    show('assignScreen');
+  } else if(mod==='attend') {
+    document.getElementById('attSup').value=curUser.name;
+    document.getElementById('attSupShow').textContent=curUser.name;
+    document.getElementById('attSupB').textContent='👔 '+curUser.name;
+    document.getElementById('attList').innerHTML='';
+    renderAttLabour();
+    show('attendScreen');
+  } else if(mod==='seed') {
+    // Auto set supervisor
+    document.getElementById('sSup').value=curUser.name;
+    document.getElementById('sSupName').value='👷 '+curUser.name;
+    document.getElementById('sSupB').textContent='👷 '+curUser.name;
+    if(!document.querySelector('[id^="vb-"]')){vCnt=0;addV();}
+    show('seedScreen');
+  } else if(mod==='water') {
+    setSel('wSup',curUser.name);
+    document.getElementById('wSupB').textContent='👷 '+curUser.name;
+    if(!document.querySelector('[id^="wlb-"]')){wlCnt=0;addWL();}
+    show('waterScreen');
+  } else if(mod==='attReport') {
+    document.getElementById('repSupB').textContent=(curUser.role==='Manager'?'👔':'👑')+' '+curUser.name;
+    document.getElementById('repTitle').textContent='👷 Attendance Report';
+    show('reportScreen');
+    loadAttReport();
+  } else if(mod==='labourReport') {
+    document.getElementById('lrSupB').textContent=(curUser.role==='Manager'?'👔':'👑')+' '+curUser.name;
+    const lrLab=document.getElementById('lrLabour');
+    lrLab.innerHTML='<option value="">-- Sab Labour --</option>';
+    LABOUR_LIST.forEach(l=>lrLab.innerHTML+='<option value="'+l.name+'">'+l.name+'</option>');
+    const t=new Date();
+    document.getElementById('lrTo').value=t.toISOString().split('T')[0];
+    const f=new Date(); f.setDate(f.getDate()-30);
+    document.getElementById('lrFrom').value=f.toISOString().split('T')[0];
+    document.getElementById('labourReportContent').innerHTML='';
+    show('labourReportScreen');
+  } else if(mod==='seedReport') {
+    document.getElementById('srSupB').textContent=(curUser.role==='Manager'?'👔':'👑')+' '+curUser.name;
+    // Fill supervisor dropdown
+    const srSup=document.getElementById('srSup');
+    srSup.innerHTML='<option value="">-- Sab Supervisors --</option>';
+    Object.keys(SUP_DATA).forEach(n=>srSup.innerHTML+='<option value="'+n+'">'+n+'</option>');
+    // Fill vegetable dropdown
+    const srVeg=document.getElementById('srVeg');
+    srVeg.innerHTML='<option value="">-- Sab Vegetables --</option>';
+    Object.keys(VDATA).forEach(v=>srVeg.innerHTML+='<option value="'+v+'">'+v+'</option>');
+    // Set default dates
+    const t=new Date();
+    document.getElementById('srTo').value=t.toISOString().split('T')[0];
+    const f=new Date(); f.setDate(f.getDate()-30);
+    document.getElementById('srFrom').value=f.toISOString().split('T')[0];
+    show('seedReportScreen');
+  } else if(mod==='report'||mod==='waterReport') {
+    document.getElementById('repSupB').textContent=(curUser.role==='Manager'?'👔':'👑')+' '+curUser.name;
+    document.getElementById('repTitle').textContent='📊 Daily Report';
+    show('reportScreen');
+  } else if(mod==='adminUsers') {
+    loadUserList();
+    show('adminScreen');
+  }
+}
+
+// ════ MORNING ASSIGNMENT ════
+function addAssignKaam() {
+  akCnt++; const akid=akCnt;
+  akLabours[akid]=[];
+  const d=document.createElement('div');
+  d.className='akaam-block'; d.id='ak-'+akid;
+  d.innerHTML='<div class="akbh"><div class="akbt"><div class="akn">'+akid+'</div> Kaam '+akid+'</div>'+(akid>1?'<button class="rmbtn" onclick="remAK('+akid+')">✕</button>':'')+
+  '</div><div class="akbb">'+
+  '<div class="fr"><label>🔨 Kaam Ka Type</label>'+
+  '<select id="akt-'+akid+'">'+
+  '<option>Seed Sowing</option><option>Watering</option><option>Spraying</option>'+
+  '<option>Potting</option><option>Weeding</option><option>Cutting/Pruning</option>'+
+  '<option>Grafting</option><option>Dispatch/Loading</option><option>Cleaning</option><option>General Work</option><option>Other</option>'+
+  '</select></div>'+
+  '<div class="fr"><label>👷 Labour Add Karo</label>'+
+  '<div style="display:flex;gap:6px;position:relative;">'+
+  '<input type="text" id="aks-'+akid+'" placeholder="Naam type karo..." oninput="filterAKLabour('+akid+')" onfocus="showAKDrop('+akid+')" onblur="setTimeout(()=>hideAKDrop('+akid+'),200)" style="flex:1;">'+
+  '<div id="akdrop-'+akid+'" class="ldrop-list"></div>'+
+  '<button onclick="addAKCustom('+akid+')" style="background:var(--or);color:white;border:none;border-radius:var(--rs);padding:9px 12px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;">+</button>'+
+  '</div></div>'+
+  '<div class="fr"><label>👥 Selected Labour</label><div class="tags-wrap" id="aktags-'+akid+'"></div></div>'+
+  '</div>';
+  document.getElementById('assignCon').appendChild(d);
+  updAKSum();
+}
+
+function remAK(akid){document.getElementById('ak-'+akid).remove();delete akLabours[akid];updAKSum();}
+
+function filterAKLabour(akid) {
+  const q=document.getElementById('aks-'+akid).value.toLowerCase();
+  const drop=document.getElementById('akdrop-'+akid);
+  // Show all when no query, filter when query exists
+  const list = q ? LABOUR_LIST.filter(l=>l.name.toLowerCase().includes(q)) : LABOUR_LIST;
+  if(list.length===0){
+    drop.innerHTML='<div class="ldrop-item" style="color:var(--g5);">Koi labour nahi — neeche naam type karke + dabao</div>';
+    drop.className='ldrop-list show';
+    return;
+  }
+  drop.innerHTML=list.map(l=>'<div class="ldrop-item" onmousedown="addAKLabour('+akid+',\''+l.name+'\')">'+l.name+'</div>').join('');
+  drop.className='ldrop-list show';
+}
+function showAKDrop(akid){filterAKLabour(akid);}
+function hideAKDrop(akid){document.getElementById('akdrop-'+akid).className='ldrop-list';}
+
+function addAKCustom(akid){
+  const val=document.getElementById('aks-'+akid).value.trim();
+  if(val) addAKLabour(akid,val);
+}
+
+function addAKLabour(akid, name) {
+  if(!akLabours[akid]) akLabours[akid]=[];
+  if(akLabours[akid].indexOf(name)!==-1){toast('⚠️ Yeh labour pehle se add hai!','error');return;}
+  akLabours[akid].push(name);
+  const tags=document.getElementById('aktags-'+akid);
+  const span=document.createElement('span');
+  span.className='labour-tag'; span.id='tag-'+akid+'-'+name.replace(/\s/g,'_');
+  span.innerHTML=name+'<button onclick="remAKLabour('+akid+',\''+name+'\')">×</button>';
+  tags.appendChild(span);
+  document.getElementById('aks-'+akid).value='';
+  hideAKDrop(akid);
+  updAKSum();
+}
+
+function remAKLabour(akid, name) {
+  akLabours[akid]=akLabours[akid].filter(n=>n!==name);
+  const tag=document.getElementById('tag-'+akid+'-'+name.replace(/\s/g,'_'));
+  if(tag) tag.remove();
+  updAKSum();
+}
+
+function updAKSum(){
+  const aks=document.querySelectorAll('[id^="ak-"]');
+  document.getElementById('asSmK').textContent=aks.length;
+  let total=0; const unique=new Set();
+  Object.values(akLabours).forEach(arr=>{arr.forEach(n=>{total++;unique.add(n);});});
+  document.getElementById('asSmL').textContent=total;
+  document.getElementById('asSmU').textContent=unique.size;
+}
+
+function submitAssign(){
+  const date=document.getElementById('asDate').value;
+  const supervisor=document.getElementById('asSup').value;
+  const area=document.getElementById('asArea').value;
+  const rem=document.getElementById('asRem').value;
+  if(!date||!supervisor||!area){toast('❗ Date, Supervisor aur Area zaroori hai!','error');return;}
+
+  const assignments=[];
+  document.querySelectorAll('[id^="ak-"]').forEach(el=>{
+    const akid=el.id.split('-')[1];
+    const kaam=document.getElementById('akt-'+akid)?.value||'';
+    const labs=akLabours[akid]||[];
+    if(kaam&&labs.length>0) assignments.push({kaam,labours:labs});
+  });
+  if(!assignments.length){toast('❗ Kam se kam ek kaam mein labour add karo!','error');return;}
+
+  const btn=document.getElementById('asSub');
+  btn.disabled=true; btn.innerHTML='⏳ Save Ho Raha Hai...';
+  const payload={module:'assignment',date,supervisor,area,remarks:rem,assignments};
+  fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)})
+    .then(()=>{
+      const total=Object.values(akLabours).reduce((s,a)=>s+a.length,0);
+      showSuc('assign','📋 Assignment save ho gayi!\n\n'+assignments.map(a=>a.kaam+': '+a.labours.join(', ')).join('\n')+'\n\nTotal Labour: '+total);
+    }).catch(()=>showSuc('assign','Entry save ho gayi!'));
+}
+
+// ════ ATTENDANCE ════
+function renderAttLabour() {
+  const con=document.getElementById('attList');
+  con.innerHTML=''; // Clear table
+  LABOUR_LIST.forEach(l=>addAttItem(l.name, l.wage));
+  buildAttDrop();
+  updAttSum();
+}
+
+function addAttItem(name, wage) {
+  // Check if table exists, create if not
+  let table = document.getElementById('attTable');
+  let tbody = document.getElementById('attTbody');
+  if(!table) {
+    const con = document.getElementById('attList');
+    con.innerHTML = '<div style="overflow-x:auto;"><table class="att-table" id="attTable">'+
+      '<thead><tr>'+
+      '<th style="width:140px;">👤 Labour</th>'+
+      '<th style="width:90px;">Status</th>'+
+      '<th style="width:55px;">💰 Wage</th>'+
+      '<th style="width:55px;">⏱️ OT Hr</th>'+
+      '<th style="width:55px;">💰 OT ₹</th>'+
+      '<th style="width:70px;">📝 Note</th>'+
+      '</tr></thead>'+
+      '<tbody id="attTbody"></tbody>'+
+      '<tfoot><tr class="att-total-row" id="attTotalRow">'+
+      '<td colspan="2">Total: <span id="attSmP2">0P</span> <span id="attSmA2">0A</span></td>'+
+      '<td id="attTotalWage">₹0</td>'+
+      '<td id="attTotalOT">0</td>'+
+      '<td id="attTotalOTW">₹0</td>'+
+      '<td></td></tr></tfoot>'+
+      '</table></div>';
+    tbody = document.getElementById('attTbody');
+  }
+  
+  const sid = name.replace(/[^a-zA-Z0-9]/g,'_');
+  if(document.getElementById('atr-'+sid)) return;
+  
+  const tr = document.createElement('tr');
+  tr.id = 'atr-'+sid;
+  tr.setAttribute('data-name', name);
+  tr.innerHTML = 
+    '<td style="font-weight:700;font-size:12px;">'+name+'<br><span style="font-size:10px;color:var(--g5);">₹'+(wage||0)+'/day</span></td>'+
+    '<td style="white-space:nowrap;">'+
+      '<button class="st-btn" id="pb-'+sid+'" onclick="setAttBySid(\''+sid+'\',\'present\')" style="margin-right:4px;">✅P</button>'+
+      '<button class="st-btn" id="hb-'+sid+'" onclick="setAttBySid(\''+sid+'\',\'halfday\')" style="margin-right:4px;">🌤H</button>'+
+      '<button class="st-btn" id="ab-'+sid+'" onclick="setAttBySid(\''+sid+'\',\'absent\')">❌A</button>'+
+    '</td>'+
+    '<td><input type="number" id="aw-'+sid+'" value="'+(wage||0)+'" min="0" style="width:55px;" oninput="updAttSum()"></td>'+
+    '<td><input type="number" id="aot-'+sid+'" value="0" min="0" step="0.5" style="width:55px;" oninput="updAttSum()"></td>'+
+    '<td><input type="number" id="aow-'+sid+'" value="0" min="0" style="width:55px;" oninput="updAttSum()"></td>'+
+    '<td><input type="text" id="an-'+sid+'" placeholder="..." style="width:65px;"></td>';
+  tbody.appendChild(tr);
+}
+
+function buildAttDrop(){
+  const drop=document.getElementById('attDropList');
+  drop.innerHTML=LABOUR_LIST.map(l=>'<div class="ldrop-item" onmousedown="selectAttLabour(\''+l.name+'\','+l.wage+')">'+l.name+'</div>').join('');
+}
+
+function filterAttLabour(){
+  const q=document.getElementById('attSearch').value.toLowerCase();
+  const drop=document.getElementById('attDropList');
+  const filtered=q?LABOUR_LIST.filter(l=>l.name.toLowerCase().includes(q)):LABOUR_LIST;
+  if(filtered.length===0){
+    drop.innerHTML='<div class="ldrop-item" style="color:var(--g5);">Koi labour nahi — naam type karke + Naya dabao</div>';
+    drop.className='ldrop-list show';
+    return;
+  }
+  drop.innerHTML=filtered.map(l=>'<div class="ldrop-item" onmousedown="selectAttLabour(\''+l.name+'\','+l.wage+')">'+l.name+'</div>').join('');
+  drop.className='ldrop-list'+(filtered.length>0?' show':'');
+}
+function showAttDrop(){filterAttLabour();}
+function hideAttDrop(){document.getElementById('attDropList').className='ldrop-list';}
+function selectAttLabour(name,wage){addAttItem(name,wage);document.getElementById('attSearch').value='';hideAttDrop();}
+
+function addCustomLabour(){
+  const name=document.getElementById('attSearch').value.trim();
+  if(!name){toast('❗ Naam type karo!','error');return;}
+  // Ask for wage
+  const wageStr=prompt(name+' ki daily wage kitni hai? (₹)','0');
+  if(wageStr===null) return;
+  const wage=parseFloat(wageStr)||0;
+  addAttItem(name,wage);
+  document.getElementById('attSearch').value='';
+  // Save to Labour Master with wage
+  fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},
+    body:JSON.stringify({module:'addLabour',name,wage,type:'Daily'})})
+    .then(()=>{
+      LABOUR_LIST.push({name,wage});
+      toast('✅ '+name+' (₹'+wage+') Labour Master mein add ho gaya!','success');
+    }).catch(()=>toast('⚠️ Sheet mein save nahi hua','error'));
+}
+
+function setAttBySid(sid, status){
+  // Find name from tr data-name attribute
+  const tr=document.getElementById('atr-'+sid);
+  if(!tr) return;
+  const name=tr.getAttribute('data-name')||sid.replace(/_/g,' ');
+  setAtt(name, status);
+}
+
+function setAtt(name, status){
+  // Clean name for ID
+  const sid = name.replace(/[^a-zA-Z0-9]/g,'_');
+  const tr  = document.getElementById('atr-'+sid);
+  const pb  = document.getElementById('pb-'+sid);
+  const hb  = document.getElementById('hb-'+sid);
+  const ab  = document.getElementById('ab-'+sid);
+  const wageEl = document.getElementById('aw-'+sid);
+
+  if(!tr){ console.log('TR not found for:', name, sid); return; }
+
+  // Reset all buttons
+  [pb,hb,ab].forEach(b=>{ if(b) b.className='st-btn'; });
+  tr.className='';
+  tr.removeAttribute('data-status');
+
+  // Get full wage from LABOUR_LIST
+  const labObj = LABOUR_LIST.find(l=>l.name===name);
+  const fullWage = labObj ? parseFloat(labObj.wage)||0 : parseFloat(wageEl?.value)||0;
+
+  if(status==='present'){
+    tr.className='row-present';
+    tr.setAttribute('data-status','present');
+    if(pb) pb.className='st-btn sp';
+    if(wageEl) wageEl.value=fullWage;
+  } else if(status==='halfday'){
+    tr.className='row-half';
+    tr.setAttribute('data-status','halfday');
+    if(hb) hb.className='st-btn sh';
+    if(wageEl) wageEl.value=Math.round(fullWage/2);
+  } else {
+    tr.className='row-absent';
+    tr.setAttribute('data-status','absent');
+    if(ab) ab.className='st-btn sa';
+    if(wageEl) wageEl.value=0;
+  }
+  updAttSum();
+}
+
+function updAttSum(){
+  let p=0,h=0,a=0,wage=0,otH=0,otW=0;
+  document.querySelectorAll('[id^="atr-"]').forEach(tr=>{
+    const sid=tr.id.replace('atr-','');
+    const st=tr.getAttribute('data-status')||'';
+    if(st==='present') p++;
+    else if(st==='halfday') h++;
+    else if(st==='absent'){a++;return;}
+    else return;
+    wage+=parseFloat(document.getElementById('aw-'+sid)?.value)||0;
+    otH+=parseFloat(document.getElementById('aot-'+sid)?.value)||0;
+    otW+=parseFloat(document.getElementById('aow-'+sid)?.value)||0;
+  });
+  const pEl=document.getElementById('attSmP'); if(pEl) pEl.textContent=p+' Full + '+h+' Half';
+  const aEl=document.getElementById('attSmA'); if(aEl) aEl.textContent=a;
+  const hEl=document.getElementById('attSmH'); if(hEl) hEl.textContent='₹'+(wage+otW);
+  const p2=document.getElementById('attSmP2'); if(p2) p2.textContent=p+'P '+h+'H';
+  const a2=document.getElementById('attSmA2'); if(a2) a2.textContent=a+'A';
+  const tw=document.getElementById('attTotalWage'); if(tw) tw.textContent='₹'+wage;
+  const tot=document.getElementById('attTotalOT'); if(tot) tot.textContent=otH+'hr';
+  const tow=document.getElementById('attTotalOTW'); if(tow) tow.textContent='₹'+otW;
+}
+
+function submitAttend(){
+  const date=document.getElementById('attDate').value;
+  const supervisor=document.getElementById('attSup').value||curUser.name;
+  const area=document.getElementById('attArea')?.value||'';
+  const kaam='Daily Attendance';
+  const rem=document.getElementById('attRem')?.value||'';
+  if(!date){toast('❗ Date zaroori hai!','error');return;}
+
+  const labours=[];
+  document.querySelectorAll('[id^="atr-"]').forEach(tr=>{
+    const sid=tr.id.replace('atr-','');
+    // Get name from first cell
+    const firstCell=tr.querySelector('td');
+    if(!firstCell) return;
+    // Get name from data attribute
+    const name=tr.getAttribute('data-name')||firstCell.textContent.split('₹')[0].replace('👤','').trim();
+    if(!name) return;
+    const ds=tr.getAttribute('data-status')||'';
+    let status='';
+    if(ds==='present') status='Present';
+    else if(ds==='halfday') status='Half Day';
+    else if(ds==='absent') status='Absent';
+    if(!status) return;
+    const wage=parseFloat(document.getElementById('aw-'+sid)?.value)||0;
+    const otHours=parseFloat(document.getElementById('aot-'+sid)?.value)||0;
+    const otWage=parseFloat(document.getElementById('aow-'+sid)?.value)||0;
+    const note=document.getElementById('an-'+sid)?.value||'';
+    labours.push({name,status,hours:status==='Half Day'?4:8,wage,otHours,otWage,note});
+  });
+
+  if(!labours.length){toast('❗ Kam se kam ek labour mark karo!','error');return;}
+  const btn=document.getElementById('attSub');
+  btn.disabled=true; btn.innerHTML='⏳ Save Ho Raha Hai...';
+
+  const p=labours.filter(l=>l.status==='Present');
+  const ab=labours.filter(l=>l.status==='Absent');
+  const totalWage=p.reduce((s,l)=>s+parseFloat(l.wage||0),0);
+
+  fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},
+    body:JSON.stringify({module:'attendance',date,supervisor,area,kaam,remarks:rem,labours})})
+    .then(()=>showSuc('attend','✅ Present: '+p.length+'\n❌ Absent: '+ab.length+'\n💰 Total Wage: ₹'+totalWage))
+    .catch(()=>showSuc('attend','Entry save ho gayi!'));
+}
+
+// ════ SEED SOWING ════
+function addV(){
+  vCnt++; const vid=vCnt; lCnt[vid]=0;
+  const d=document.createElement('div'); d.className='vblock'; d.id='vb-'+vid;
+  d.innerHTML='<div class="vbh"><div class="vbt"><div class="vn">'+vid+'</div> Variety '+vid+'</div>'+(vid>1?'<button class="rmbtn" onclick="remV('+vid+')">✕</button>':'')+
+  '</div><div class="vbb">'+
+  '<div class="fr"><label>🥬 Vegetable</label><select id="vg-'+vid+'" onchange="loadVars('+vid+')"><option value="">-- Vegetable Chunein --</option>'+
+  Object.keys(VDATA).map(v=>'<option value="'+v+'">'+v+'</option>').join('')+'</select></div>'+
+  '<div class="fr"><label>🌱 Variety</label><select id="vr-'+vid+'" disabled onchange="updSS()"><option value="">-- Pehle Vegetable Chunein --</option></select></div>'+
+  '<div class="g2"><div><label>🔢 Lot No.</label><input type="text" id="vl-'+vid+'" placeholder="L-001"></div>'+
+  '<div><label>📦 Total PKT</label><input type="number" id="vp-'+vid+'" placeholder="0" min="0" step="0.5" oninput="calcP('+vid+')"></div></div>'+
+  '<div class="g3"><div><label>🪣 Trays</label><input type="number" id="vt-'+vid+'" placeholder="0" min="0" oninput="calcP('+vid+')"></div>'+
+  '<div><label>🥤 Cup/Tray</label><input type="number" id="vc-'+vid+'" placeholder="0" min="0" oninput="calcP('+vid+')"></div>'+
+  '<div><label>🌿 Seeds/Cup</label><input type="number" id="vs-'+vid+'" placeholder="1" min="1" oninput="calcP('+vid+')"></div></div>'+
+  '<div class="tplants"><span class="lbl">Total Plants</span><span class="val" id="tv-'+vid+'">0</span></div>'+
+  '<div class="lstitle">👷 Is Variety Pe Labour <span id="ll-'+vid+'">0 labour</span></div>'+
+  '<div id="lc-'+vid+'"></div>'+
+  '<button class="abtn ao" onclick="addSL('+vid+')">➕ Labour Add Karo</button></div>';
+  document.getElementById('vCon').appendChild(d);
+  addSL(vid); updSS();
+}
+function remV(vid){document.getElementById('vb-'+vid).remove();delete lCnt[vid];updSS();}
+
+function loadVars(vid){
+  const veg=document.getElementById('vg-'+vid).value;
+  const sel=document.getElementById('vr-'+vid);
+  sel.innerHTML='<option value="">-- Variety Chunein --</option>';
+  if(veg&&VDATA[veg]){VDATA[veg].forEach(v=>sel.innerHTML+='<option>'+v+'</option>');sel.disabled=false;}
+  else sel.disabled=true;
+  updSS();
+}
+
+function calcP(vid){
+  const t=parseInt(document.getElementById('vt-'+vid)?.value)||0;
+  const c=parseInt(document.getElementById('vc-'+vid)?.value)||0;
+  const s=parseInt(document.getElementById('vs-'+vid)?.value)||1;
+  document.getElementById('tv-'+vid).textContent=(t*c*s).toLocaleString();
+  updSS();
+}
+
+function addSL(vid){
+  lCnt[vid]=(lCnt[vid]||0)+1; const lid=lCnt[vid];
+  const d=document.createElement('div'); d.className='lrow'; d.id='lr-'+vid+'-'+lid;
+  d.innerHTML='<div class="lrtop"><div style="display:flex;align-items:center;gap:6px;"><div class="lrn">'+lid+'</div><span style="font-size:12px;font-weight:700;color:#5c3d1e;">Labour '+lid+'</span></div>'+
+  (lid>1?'<button class="rmbtn2" onclick="remSL('+vid+','+lid+')">✕</button>':'')+
+  '</div><div class="fr"><label>👤 Naam</label><input type="text" id="ln-'+vid+'-'+lid+'" placeholder="Naam..." oninput="updSS()" list="labourNames"></div>'+
+  '<div class="g2"><div><label>📦 PKT</label><input type="number" id="lp-'+vid+'-'+lid+'" placeholder="0" min="0" step="0.5" oninput="updSS()"></div>'+
+  '<div><label>🪣 Tray</label><input type="number" id="lt-'+vid+'-'+lid+'" placeholder="0" min="0" oninput="updSS()"></div></div>';
+  document.getElementById('lc-'+vid).appendChild(d);
+  document.getElementById('ll-'+vid).textContent=document.querySelectorAll('[id^="lr-'+vid+'-"]').length+' labour';
+  updSS();
+}
+function remSL(vid,lid){document.getElementById('lr-'+vid+'-'+lid).remove();document.getElementById('ll-'+vid).textContent=document.querySelectorAll('[id^="lr-'+vid+'-"]').length+' labour';updSS();}
+
+function updSS(){
+  const vbs=document.querySelectorAll('[id^="vb-"]');
+  document.getElementById('smV').textContent=vbs.length;
+  let pl=0,lb=0,pk=0; const chips=[];
+  vbs.forEach(vb=>{
+    const vid=vb.id.split('-')[1];
+    const t=parseInt(document.getElementById('vt-'+vid)?.value)||0;
+    const c=parseInt(document.getElementById('vc-'+vid)?.value)||0;
+    const s=parseInt(document.getElementById('vs-'+vid)?.value)||1;
+    pl+=t*c*s;
+    const vr=document.getElementById('vr-'+vid)?.value||'';
+    const vg=document.getElementById('vg-'+vid)?.value||'';
+    if(vr) chips.push(vg.split(' ').pop()+' • '+vr);
+    vb.querySelectorAll('[id^="lr-"]').forEach(lr=>{
+      lb++;
+      const pts=lr.id.split('-'); const lid=pts[pts.length-1]; const v=pts[pts.length-2];
+      pk+=parseInt(document.getElementById('lp-'+v+'-'+lid)?.value)||0;
+    });
+  });
+  document.getElementById('smP').textContent=pl.toLocaleString();
+  document.getElementById('smL').textContent=lb;
+  document.getElementById('smPk').textContent=pk;
+  document.getElementById('chipRow').innerHTML=chips.map(c=>'<div class="chip">'+c+'</div>').join('');
+}
+
+function submitSeed(){
+  const date=document.getElementById('sDate').value;
+  const supervisor=document.getElementById('sSup').value;
+  const area=document.getElementById('sArea').value;
+  const shift=document.getElementById('sShift').value;
+  const rem=document.getElementById('sRem').value;
+  if(!date||!supervisor||!area){toast('❗ Date, Supervisor aur Area zaroori hai!','error');return;}
+  const entries=[];
+  for(const vb of document.querySelectorAll('[id^="vb-"]')){
+    const vid=vb.id.split('-')[1];
+    const veg=document.getElementById('vg-'+vid)?.value||'';
+    const vr=document.getElementById('vr-'+vid)?.value||'';
+    if(!veg||!vr){toast('❗ Variety '+vid+' mein vegetable aur variety chunein!','error');return;}
+    const t=parseInt(document.getElementById('vt-'+vid)?.value)||0;
+    const c=parseInt(document.getElementById('vc-'+vid)?.value)||0;
+    const s=parseInt(document.getElementById('vs-'+vid)?.value)||1;
+    const totalPkt=parseInt(document.getElementById('vp-'+vid)?.value)||0;
+    const labs=[];
+    let labourPkt=0;
+    vb.querySelectorAll('[id^="lr-"]').forEach(lr=>{
+      const pts=lr.id.split('-'); const lid=pts[pts.length-1]; const v=pts[pts.length-2];
+      const nm=document.getElementById('ln-'+v+'-'+lid)?.value||'';
+      const lp=parseInt(document.getElementById('lp-'+v+'-'+lid)?.value)||0;
+      const lt=parseInt(document.getElementById('lt-'+v+'-'+lid)?.value)||0;
+      if(nm){labs.push({name:nm,pkt:lp,tray:lt});labourPkt+=lp;}
+    });
+    // PKT validation
+    if(totalPkt>0 && labs.length>0 && labourPkt!==totalPkt){
+      toast('❌ Variety '+vid+' ('+vr+'): Total PKT '+totalPkt+' hai lekin Labour PKT sum '+labourPkt+' hai! Match karo.','error');
+      return;
+    }
+    entries.push({vegetable:veg,variety:vr,lot:document.getElementById('vl-'+vid)?.value||'',
+      pkt:totalPkt,tray:t,cup:c,seeds:s,totalPlants:t*c*s,labours:labs});
+  }
+  if(!entries.length){toast('❗ Kam se kam ek variety add karo!','error');return;}
+  const btn=document.getElementById('sSub');
+  btn.disabled=true; btn.innerHTML='⏳ Save Ho Raha Hai...';
+  fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({date,supervisor,area,shift,remarks:rem,entries})})
+    .then(()=>{
+      const tp=entries.reduce((s,e)=>s+e.totalPlants,0);
+      showSuc('seed','🌱 '+entries.length+' varieties\n🌿 '+tp.toLocaleString()+' total plants\n👷 '+entries.reduce((s,e)=>s+e.labours.length,0)+' labour');
+    }).catch(()=>showSuc('seed','Entry save ho gayi!'));
+}
+
+// ════ WATERING ════
+function setWT(type){
+  document.getElementById('wKT').value=type;
+  document.getElementById('btnW').className='tbtn'+(type==='water'?' aw':'');
+  document.getElementById('btnS').className='tbtn'+(type==='spray'?' as':'');
+  document.getElementById('watSec').className='watsec'+(type==='water'?'':' hide');
+  document.getElementById('spraySec').className='wsec'+(type==='spray'?' show':'');
+  if(type==='spray'&&!document.querySelector('[id^="cb-"]')) addC();
+  updWS();
+}
+function addC(){
+  cCnt++; const cid=cCnt;
+  const d=document.createElement('div'); d.className='cblock'; d.id='cb-'+cid;
+  d.innerHTML='<div class="cbh"><div class="cbt"><div class="cn">'+cid+'</div> Chemical '+cid+'</div>'+(cid>1?'<button class="rmbtn" onclick="remC('+cid+')">✕</button>':'')+
+  '</div><div class="cbb"><div class="fr"><label>🧪 Naam</label><input type="text" id="cn-'+cid+'" placeholder="e.g. Imidacloprid, DAP"></div>'+
+  '<div class="g3"><div><label>📏 Dose</label><input type="number" id="cd-'+cid+'" placeholder="0" step="0.1"></div>'+
+  '<div><label>📐 Unit</label><select id="cu-'+cid+'"><option>ml/pump</option><option>gm/pump</option><option>ml/litre</option><option>gm/litre</option><option>ml total</option><option>gm total</option></select></div>'+
+  '<div><label>🎯 Purpose</label><select id="cp-'+cid+'"><option>Pesticide</option><option>Fungicide</option><option>Fertilizer</option><option>Growth Promoter</option><option>Weedicide</option><option>Other</option></select></div></div>'+
+  '<div class="fr"><label>🌱 Plants</label><input type="text" id="cpl-'+cid+'" placeholder="e.g. Mirchi, All seedlings"></div></div>';
+  document.getElementById('cCon').appendChild(d);
+}
+function remC(cid){document.getElementById('cb-'+cid).remove();}
+function addWL(){
+  wlCnt++; const lid=wlCnt;
+  const d=document.createElement('div'); d.className='wlblock'; d.id='wlb-'+lid;
+  d.innerHTML='<div class="wlbh"><div class="wlbt"><div class="wln">'+lid+'</div> Labour '+lid+'</div>'+(lid>1?'<button class="rmbtn" onclick="remWL('+lid+')">✕</button>':'')+
+  '</div><div class="wlbb"><div class="fr"><label>👤 Naam</label><input type="text" id="wln-'+lid+'" placeholder="Naam..." oninput="updWS()" list="labourNames"></div>'+
+  '<div class="g2"><div><label>⏱️ Ghante</label><input type="number" id="wlh-'+lid+'" placeholder="0" min="0" step="0.5" oninput="updWS()"></div>'+
+  '<div><label>🔧 Kaam</label><select id="wlt-'+lid+'"><option>Watering</option><option>Spraying</option><option>Pump chalana</option><option>Pipe pakadna</option><option>Dono</option></select></div></div>'+
+  '<div class="fr"><label>🪣 Pumps</label><input type="number" id="wlp-'+lid+'" placeholder="0" min="0" oninput="updWS()"></div></div>';
+  document.getElementById('wlCon').appendChild(d);
+  updWS();
+}
+function remWL(lid){document.getElementById('wlb-'+lid).remove();updWS();}
+function updWS(){
+  document.getElementById('wsmL').textContent=document.querySelectorAll('[id^="wlb-"]').length;
+  const type=document.getElementById('wKT').value;
+  if(type==='spray'){const p=parseInt(document.getElementById('pCnt')?.value)||0;const w=parseInt(document.getElementById('wPP')?.value)||0;document.getElementById('wsmPu').textContent=p;document.getElementById('wsmW').textContent=(p*w)+'L';}
+  else{document.getElementById('wsmPu').textContent='—';document.getElementById('wsmW').textContent=(parseInt(document.getElementById('wLitre')?.value)||0)+'L';}
+}
+function submitWater(){
+  const date=document.getElementById('wDate').value;
+  const supervisor=document.getElementById('wSup').value;
+  const area=document.getElementById('wArea').value;
+  const shift=document.getElementById('wShift').value;
+  const kaamType=document.getElementById('wKT').value;
+  const rem=document.getElementById('wRem').value;
+  if(!date||!supervisor||!area){toast('❗ Date, Supervisor aur Area zaroori hai!','error');return;}
+  const labs=[];
+  document.querySelectorAll('[id^="wlb-"]').forEach(el=>{
+    const lid=el.id.split('-')[1];
+    const nm=document.getElementById('wln-'+lid)?.value||'';
+    if(nm) labs.push({name:nm,hours:document.getElementById('wlh-'+lid)?.value||0,task:document.getElementById('wlt-'+lid)?.value||'',pumps:document.getElementById('wlp-'+lid)?.value||0});
+  });
+  let payload={module:'watering_spraying',date,supervisor,area,shift,kaamType,remarks:rem,labours:labs,startTime:document.getElementById('wST')?.value||'',endTime:document.getElementById('wET')?.value||''};
+  if(kaamType==='spray'){
+    const chems=[];
+    document.querySelectorAll('[id^="cb-"]').forEach(el=>{const cid=el.id.split('-')[1];const nm=document.getElementById('cn-'+cid)?.value||'';if(nm) chems.push({name:nm,dose:document.getElementById('cd-'+cid)?.value||0,unit:document.getElementById('cu-'+cid)?.value||'',purpose:document.getElementById('cp-'+cid)?.value||'',plants:document.getElementById('cpl-'+cid)?.value||''});});
+    payload.pumpCount=document.getElementById('pCnt')?.value||0;payload.waterPerPump=document.getElementById('wPP')?.value||0;payload.areaCovered=document.getElementById('aCov')?.value||'';payload.sprayerType=document.getElementById('spType')?.value||'';payload.chemicals=chems;
+  } else {payload.waterMethod=document.getElementById('wMeth')?.value||'';payload.waterLitre=document.getElementById('wLitre')?.value||0;payload.waterPlants=document.getElementById('wPlants')?.value||'';}
+  const btn=document.getElementById('wSub');
+  btn.disabled=true; btn.innerHTML='⏳ Save Ho Raha Hai...';
+  fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)})
+    .then(()=>showSuc('water','💧 '+(kaamType==='spray'?'Spraying':'Watering')+'\n👷 Labour: '+labs.length+(kaamType==='spray'?'\n🪣 Pumps: '+payload.pumpCount:'\n💦 Pani: '+payload.waterLitre+'L')))
+    .catch(()=>showSuc('water','Entry save ho gayi!'));
+}
+
+// ════ REPORTS ════
+function loadAttReport(){
+  const from=document.getElementById('repFrom').value;
+  const to=document.getElementById('repTo').value;
+  const con=document.getElementById('reportContent');
+  con.innerHTML='<div class="card" style="margin-top:10px;text-align:center;padding:20px;"><div style="font-size:30px;">⏳</div><div style="font-weight:700;">Loading...</div></div>';
+
+  // Load Attendance Records
+  const ts=Date.now();
+  Promise.all([
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Attendance%20Records&headers=1&t='+ts).then(r=>r.text()),
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Labour%20Master&headers=1&t='+ts).then(r=>r.text()),
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Morning%20Assignment&headers=1&t='+ts).then(r=>r.text())
+  ]).then(([attTxt, masterTxt, assignTxt])=>{
+    // Parse attendance
+    let attRows=[];
+    try{
+      const j=JSON.parse(attTxt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+      attRows=j.table.rows.filter(r=>r.c&&r.c[0]&&r.c[0].v&&r.c[0].v!=='Date');
+    }catch(e){}
+
+    // Parse master list
+    let allLabours=[];
+    try{
+      const j=JSON.parse(masterTxt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+      allLabours=j.table.rows.filter(r=>r.c&&r.c[0]&&r.c[0].v&&r.c[0].v!=='Labour Naam').map(r=>r.c[0].v.toString().trim());
+    }catch(e){}
+
+    // Parse assignments
+    let assignRows=[];
+    try{
+      const j=JSON.parse(assignTxt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+      assignRows=j.table.rows.filter(r=>r.c&&r.c[0]&&r.c[0].v&&r.c[0].v!=='Date');
+    }catch(e){}
+
+    // Filter by date range
+    const filtAtt=attRows.filter(r=>{
+      if(!r.c||!r.c[0]||!r.c[0].v) return false;
+      // gviz returns Date(yyyy,mm,dd) format - convert to string
+      let d=r.c[0].v.toString();
+      if(d.startsWith('Date(')) {
+        const parts=d.replace('Date(','').replace(')','').split(',');
+        const yr=parts[0]; const mo=String(parseInt(parts[1])+1).padStart(2,'0'); const dy=String(parts[2]).padStart(2,'0');
+        d=yr+'-'+mo+'-'+dy;
+      }
+      r._dateStr=d; // cache
+      return d>=from && d<=to;
+    });
+
+    // Group by date
+    const byDate={};
+    filtAtt.forEach(r=>{
+      const date=r._dateStr||(r.c[0]?.v?.toString()||'');
+      const sup=r.c[1]?.v?.toString()||'';
+      const labour=r.c[4]?.v?.toString()||'';
+      const status=r.c[5]?.v?.toString()||'';
+      const wage=parseFloat(r.c[7]?.v)||0;
+      const otH=parseFloat(r.c[8]?.v)||0;
+      const otW=parseFloat(r.c[9]?.v)||0;
+      if(!byDate[date]) byDate[date]={present:[],half:[],absent:[],wage:0,otW:0};
+      if(status==='Present') byDate[date].present.push(labour);
+      else if(status==='Half Day') byDate[date].half.push(labour);
+      else if(status==='Absent') byDate[date].absent.push(labour);
+      byDate[date].wage+=wage;
+      byDate[date].otW+=otW;
+    });
+
+    // Find assigned but not in attendance
+    const assignedByDate={};
+    assignRows.forEach(r=>{
+      if(!r.c||!r.c[0]||!r.c[0].v) return;
+      let date=r.c[0].v.toString();
+      if(date.startsWith('Date(')){
+        const parts=date.replace('Date(','').replace(')','').split(',');
+        const yr=parts[0]; const mo=String(parseInt(parts[1])+1).padStart(2,'0'); const dy=String(parts[2]).padStart(2,'0');
+        date=yr+'-'+mo+'-'+dy;
+      }
+      const labs=(r.c[4]?.v||'').split(',').map(s=>s.trim()).filter(Boolean);
+      if(!assignedByDate[date]) assignedByDate[date]=[];
+      labs.forEach(l=>{ if(!assignedByDate[date].includes(l)) assignedByDate[date].push(l); });
+    });
+
+    let html='';
+
+    // Summary card
+    const totalP=Object.values(byDate).reduce((s,d)=>s+d.present.length,0);
+    const totalH=Object.values(byDate).reduce((s,d)=>s+d.half.length,0);
+    const totalA=Object.values(byDate).reduce((s,d)=>s+d.absent.length,0);
+    const totalW=Object.values(byDate).reduce((s,d)=>s+d.wage,0);
+    const totalOTW=Object.values(byDate).reduce((s,d)=>s+d.otW,0);
+
+    html+='<div class="rep-card"><div class="rep-title">📊 Summary: '+from+' to '+to+'</div>'+
+      '<div class="stat-grid">'+
+      '<div class="stat-item"><span class="sv" style="color:var(--gm);">'+totalP+'</span><div class="sl">Present</div></div>'+
+      '<div class="stat-item"><span class="sv" style="color:#f57c00;">'+totalH+'</span><div class="sl">Half Day</div></div>'+
+      '<div class="stat-item"><span class="sv" style="color:var(--rd);">'+totalA+'</span><div class="sl">Absent</div></div>'+
+      '</div>'+
+      '<div style="background:var(--gp);border-radius:10px;padding:10px;margin-top:8px;">'+
+      '<div style="display:flex;justify-content:space-between;font-weight:700;font-size:13px;">'+
+      '<span>💰 Total Wage: ₹'+totalW+'</span><span>⏱️ OT Wage: ₹'+totalOTW+'</span>'+
+      '<span style="color:var(--gm);">Grand Total: ₹'+(totalW+totalOTW)+'</span></div></div></div>';
+
+    // Date-wise detail with match check
+    Object.keys(byDate).sort().reverse().forEach(date=>{
+      const d=byDate[date];
+      const assigned=assignedByDate[date]||[];
+      const presentAll=[...d.present,...d.half];
+      const missing=assigned.filter(l=>!presentAll.includes(l));
+      const extra=presentAll.filter(l=>assigned.length>0&&!assigned.includes(l));
+
+      html+='<div class="rep-card">'+
+        '<div class="rep-title">📅 '+date+'</div>'+
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">'+
+        '<span class="tag p">✅ Present: '+d.present.length+'</span>'+
+        '<span class="tag" style="background:#fff8e1;color:#f57c00;">🌤 Half: '+d.half.length+'</span>'+
+        '<span class="tag a">❌ Absent: '+d.absent.length+'</span>'+
+        '<span class="tag sup">💰 ₹'+(d.wage+d.otW)+'</span>'+
+        '</div>';
+
+      if(d.present.length>0) html+='<div style="font-size:12px;color:var(--gm);margin-bottom:4px;"><b>Present:</b> '+d.present.join(', ')+'</div>';
+      if(d.half.length>0) html+='<div style="font-size:12px;color:#f57c00;margin-bottom:4px;"><b>Half Day:</b> '+d.half.join(', ')+'</div>';
+      if(d.absent.length>0) html+='<div style="font-size:12px;color:var(--rd);margin-bottom:4px;"><b>Absent:</b> '+d.absent.join(', ')+'</div>';
+
+      // Match check
+      if(missing.length>0){
+        html+='<div style="background:var(--rl);border-radius:8px;padding:8px 12px;margin-top:8px;font-size:12px;font-weight:700;color:var(--rd);">'+
+          '⚠️ LABOUR ENTRY NOT MATCH! Yeh assigned the lekin entry nahi: <b>'+missing.join(', ')+'</b></div>';
+      }
+      if(extra.length>0){
+        html+='<div style="background:#fff3e0;border-radius:8px;padding:8px 12px;margin-top:6px;font-size:12px;font-weight:700;color:#e65100;">'+
+          '⚠️ Yeh labour assigned nahi the lekin entry aayi: <b>'+extra.join(', ')+'</b></div>';
+      }
+      html+='</div>';
+    });
+
+    if(Object.keys(byDate).length===0){
+      html='<div class="rep-card" style="text-align:center;color:var(--g5);padding:30px;">Is date range mein koi attendance record nahi mila.</div>';
+    }
+
+    con.innerHTML=html;
+  }).catch(err=>{
+    con.innerHTML='<div class="rep-card" style="text-align:center;color:var(--rd);padding:20px;">⚠️ Data load nahi hua. Internet check karo.</div>';
+  });
+}
+
+function loadSeedReport(){
+  const from=document.getElementById('srFrom').value;
+  const to=document.getElementById('srTo').value;
+  const supFilter=document.getElementById('srSup').value;
+  const vegFilter=document.getElementById('srVeg').value;
+  const areaFilter=document.getElementById('srArea').value;
+  const varFilter=document.getElementById('srVariety').value.toLowerCase();
+  const con=document.getElementById('seedReportContent');
+  con.innerHTML='<div class="card" style="margin-top:10px;text-align:center;padding:20px;"><div style="font-size:30px;">⏳</div><div style="font-weight:700;color:var(--gd);">Report load ho rahi hai...</div></div>';
+
+  const ts=Date.now();
+  Promise.all([
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Seed%20Sowing%20Data&headers=1&t='+ts).then(r=>r.text()),
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Seed%20Labour%20Data&headers=1&t='+ts).then(r=>r.text()).catch(()=>'')
+  ])
+    .then(([txt, labTxt])=>{
+      function fixDate(rw){
+        if(!rw.c||!rw.c[0]||!rw.c[0].v) return '';
+        let d=rw.c[0].v.toString();
+        if(d.startsWith('Date(')){
+          const pts=d.replace('Date(','').replace(')','').split(',');
+          d=pts[0]+'-'+String(parseInt(pts[1])+1).padStart(2,'0')+'-'+String(pts[2]).padStart(2,'0');
+        }
+        return d;
+      }
+      let rows=[];
+      try{
+        const json=JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+        rows=json.table.rows.filter(r=>r.c&&r.c[0]&&r.c[0].v&&r.c[0].v!=='Date');
+      }catch(e){}
+      rows.forEach(r=>{ r._date=fixDate(r); });
+
+      // Build labour map: key = date|area|veg|variety|lot -> [{name,pkt,tray}]
+      const labMap={};
+      try{
+        const ljson=JSON.parse(labTxt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+        ljson.table.rows.filter(r=>r.c&&r.c[0]&&r.c[0].v&&r.c[0].v!=='Date').forEach(r=>{
+          const d=fixDate(r);
+          const key=d+'|'+(r.c[2]?.v||'')+'|'+(r.c[3]?.v||'')+'|'+(r.c[4]?.v||'')+'|'+(r.c[5]?.v||'');
+          if(!labMap[key]) labMap[key]=[];
+          labMap[key].push({name:(r.c[6]?.v||'').toString(),pkt:r.c[7]?.v||0,tray:r.c[8]?.v||0});
+        });
+      }catch(e){}
+
+      // Apply filters
+      const filtered=rows.filter(r=>{
+        if(!r._date) return false;
+        if(r._date<from||r._date>to) return false;
+        if(supFilter && (r.c[1]?.v||'').toString()!==supFilter) return false;
+        if(vegFilter && (r.c[4]?.v||'').toString()!==vegFilter) return false;
+        if(areaFilter && (r.c[2]?.v||'').toString()!==areaFilter) return false;
+        if(varFilter && !(r.c[5]?.v||'').toString().toLowerCase().includes(varFilter)) return false;
+        return true;
+      });
+
+      if(filtered.length===0){
+        con.innerHTML='<div class="card" style="margin-top:10px;text-align:center;color:var(--g5);padding:30px;">Is filter mein koi record nahi mila.</div>';
+        return;
+      }
+
+      // Calculate totals
+      let totalPkt=0, totalTrays=0, totalPlants=0;
+      const byVeg={}, bySup={}, byDate={};
+
+      filtered.forEach(r=>{
+        const date=r._date||'';
+        const sup=(r.c[1]?.v||'').toString();
+        const veg=(r.c[4]?.v||'').toString();
+        const variety=(r.c[5]?.v||'').toString();
+        const lot=(r.c[6]?.v||'').toString();
+        const pkt=parseFloat(r.c[7]?.v)||0;
+        const trays=parseFloat(r.c[8]?.v)||0;
+        const plants=parseFloat(r.c[11]?.v)||0;
+
+        totalPkt+=pkt; totalTrays+=trays; totalPlants+=plants;
+
+        if(!byVeg[veg]) byVeg[veg]={pkt:0,trays:0,plants:0,varieties:{}};
+        byVeg[veg].pkt+=pkt; byVeg[veg].trays+=trays; byVeg[veg].plants+=plants;
+        if(!byVeg[veg].varieties[variety]) byVeg[veg].varieties[variety]={pkt:0,trays:0,plants:0};
+        byVeg[veg].varieties[variety].pkt+=pkt;
+        byVeg[veg].varieties[variety].trays+=trays;
+        byVeg[veg].varieties[variety].plants+=plants;
+
+        if(!bySup[sup]) bySup[sup]={pkt:0,plants:0};
+        bySup[sup].pkt+=pkt; bySup[sup].plants+=plants;
+      });
+
+      let html='';
+
+      // Grand Total Card
+      html+='<div class="rep-card" style="margin-top:10px;">'+
+        '<div class="rep-title">📊 Grand Total — '+filtered.length+' Records</div>'+
+        '<div class="rep-sub">'+from+' to '+to+'</div>'+
+        '<div class="stat-grid">'+
+        '<div class="stat-item"><span class="sv">'+totalPkt.toLocaleString()+'</span><div class="sl">Total PKT</div></div>'+
+        '<div class="stat-item"><span class="sv">'+totalTrays.toLocaleString()+'</span><div class="sl">Total Trays</div></div>'+
+        '<div class="stat-item"><span class="sv">'+totalPlants.toLocaleString()+'</span><div class="sl">Total Plants</div></div>'+
+        '</div></div>';
+
+      // Vegetable-wise table
+      html+='<div class="rep-card"><div class="rep-title">🥬 Vegetable-wise Report</div>'+
+        '<div style="overflow-x:auto;"><table class="att-table">'+
+        '<thead><tr><th>Vegetable</th><th>Variety</th><th>PKT</th><th>Trays</th><th>Plants</th></tr></thead><tbody>';
+      Object.entries(byVeg).forEach(([veg,vdata])=>{
+        html+='<tr style="background:var(--gp);font-weight:700;">'+
+          '<td>'+veg+'</td><td style="color:var(--g5);">'+Object.keys(vdata.varieties).length+' varieties</td>'+
+          '<td>'+vdata.pkt+'</td><td>'+vdata.trays+'</td><td>'+vdata.plants.toLocaleString()+'</td></tr>';
+        Object.entries(vdata.varieties).forEach(([vr,vrdata])=>{
+          html+='<tr><td style="color:var(--g5);padding-left:16px;">↳</td><td>'+vr+'</td>'+
+            '<td>'+vrdata.pkt+'</td><td>'+vrdata.trays+'</td><td>'+vrdata.plants.toLocaleString()+'</td></tr>';
+        });
+      });
+      html+='<tr style="background:var(--gd);color:white;font-weight:800;">'+
+        '<td colspan="2">TOTAL</td><td>'+totalPkt+'</td><td>'+totalTrays+'</td><td>'+totalPlants.toLocaleString()+'</td></tr>';
+      html+='</tbody></table></div></div>';
+
+      // Supervisor-wise
+      html+='<div class="rep-card"><div class="rep-title">👷 Supervisor-wise</div>'+
+        '<div style="overflow-x:auto;"><table class="att-table">'+
+        '<thead><tr><th>Supervisor</th><th>PKT</th><th>Plants</th></tr></thead><tbody>';
+      Object.entries(bySup).forEach(([sup,sdata])=>{
+        html+='<tr><td>'+sup+'</td><td>'+sdata.pkt+'</td><td>'+sdata.plants.toLocaleString()+'</td></tr>';
+      });
+      html+='<tr style="background:var(--gd);color:white;font-weight:800;">'+
+        '<td>TOTAL</td><td>'+totalPkt+'</td><td>'+totalPlants.toLocaleString()+'</td></tr>';
+      html+='</tbody></table></div></div>';
+
+      // Detail table (expandable rows — click se labour breakdown khulta hai)
+      html+='<div class="rep-card"><div class="rep-title">📋 Detail Records ('+filtered.length+') <span style="font-size:11px;color:var(--g5);font-weight:600;">— row pe click karo</span></div>'+
+        '<div style="overflow-x:auto;"><table class="att-table">'+
+        '<thead><tr><th></th><th>Date</th><th>Supervisor</th><th>Vegetable</th><th>Variety</th><th>Lot</th><th>PKT</th><th>Trays</th><th>Plants</th></tr></thead><tbody>';
+      filtered.forEach((r,idx)=>{
+        const key=r._date+'|'+(r.c[2]?.v||'')+'|'+(r.c[4]?.v||'')+'|'+(r.c[5]?.v||'')+'|'+(r.c[6]?.v||'');
+        const labs=labMap[key]||[];
+        const rid='sr_exp_'+idx;
+        html+='<tr class="exp-toggle" onclick="toggleRow(\''+rid+'\')">'+
+          '<td><span class="exp-arrow">▶</span></td>'+
+          '<td>'+r._date+'</td>'+
+          '<td>'+(r.c[1]?.v||'')+'</td>'+
+          '<td>'+(r.c[4]?.v||'')+'</td>'+
+          '<td>'+(r.c[5]?.v||'')+'</td>'+
+          '<td>'+(r.c[6]?.v||'')+'</td>'+
+          '<td>'+(r.c[7]?.v||0)+'</td>'+
+          '<td>'+(r.c[8]?.v||0)+'</td>'+
+          '<td>'+(parseFloat(r.c[11]?.v)||0).toLocaleString()+'</td>'+
+          '</tr>';
+        html+='<tr class="exp-row" id="'+rid+'"><td colspan="9" class="exp-inner">';
+        if(labs.length>0){
+          html+='<table><thead><tr><th>👤 Labour</th><th>PKT</th><th>Tray</th></tr></thead><tbody>';
+          labs.forEach(l=>{ html+='<tr><td>'+l.name+'</td><td>'+l.pkt+'</td><td>'+l.tray+'</td></tr>'; });
+          html+='</tbody></table>';
+        } else {
+          html+='<div style="color:var(--g5);font-size:12px;">Labour breakdown nahi mila.</div>';
+        }
+        html+='</td></tr>';
+      });
+      html+='<tr style="background:var(--gd);color:white;font-weight:800;">'+
+        '<td colspan="6">TOTAL</td><td>'+totalPkt+'</td><td>'+totalTrays+'</td><td>'+totalPlants.toLocaleString()+'</td></tr>';
+      html+='</tbody></table></div></div>';
+
+      con.innerHTML=html;
+    }).catch(()=>{
+      con.innerHTML='<div class="rep-card" style="text-align:center;color:var(--rd);padding:20px;">⚠️ Data load nahi hua. Internet check karo.</div>';
+    });
+}
+
+function loadMyReport(){
+  const from=document.getElementById('mrFrom').value;
+  const to=document.getElementById('mrTo').value;
+  const workType=document.getElementById('mrWorkType').value;
+  const vegFilter=document.getElementById('mrVeg').value;
+  const areaFilter=document.getElementById('mrArea').value;
+  const varFilter=document.getElementById('mrVariety').value.toLowerCase();
+  const myName=curUser.name;
+  const con=document.getElementById('myReportContent');
+  con.innerHTML='<div class="card" style="margin-top:10px;text-align:center;padding:20px;"><div style="font-size:30px;">⏳</div><div style="font-weight:700;color:var(--gd);">Report load ho rahi hai...</div></div>';
+
+  const ts=Date.now();
+  Promise.all([
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Seed%20Sowing%20Data&headers=1&t='+ts).then(r=>r.text()),
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Watering%20Records&headers=1&t='+ts).then(r=>r.text()).catch(()=>''),
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Spraying%20Records&headers=1&t='+ts).then(r=>r.text()).catch(()=>''),
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Seed%20Labour%20Data&headers=1&t='+ts).then(r=>r.text()).catch(()=>''),
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=W-S%20Labour&headers=1&t='+ts).then(r=>r.text()).catch(()=>''),
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Chemical%20Records&headers=1&t='+ts).then(r=>r.text()).catch(()=>''),
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Morning%20Assignment&headers=1&t='+ts).then(r=>r.text()).catch(()=>'')
+  ]).then(([seedTxt, watTxt, sprTxt, seedLabTxt, wsLabTxt, chemTxt, assignTxt])=>{
+    function parseRows(txt){try{const json=JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);return json.table.rows.filter(r=>r.c&&r.c[0]&&r.c[0].v&&r.c[0].v!=='Date');}catch(e){return [];}}
+    function fixDate(r){if(!r.c||!r.c[0]||!r.c[0].v) return '';let d=r.c[0].v.toString();if(d.startsWith('Date(')){const pts=d.replace('Date(','').replace(')','').split(',');d=pts[0]+'-'+String(parseInt(pts[1])+1).padStart(2,'0')+'-'+String(pts[2]).padStart(2,'0');}return d;}
+    let html='';let ridCounter=0;function expRow(innerHtml,colspan){ridCounter++;const rid='mr_exp_'+ridCounter;return {rid,row:'<tr class="exp-row" id="'+rid+'"><td colspan="'+colspan+'" class="exp-inner">'+innerHtml+'</td></tr>'};};
+    let seedLabRows=parseRows(seedLabTxt);let wsLabRows=parseRows(wsLabTxt);let chemRows=parseRows(chemTxt);seedLabRows.forEach(r=>{r._date=fixDate(r);});wsLabRows.forEach(r=>{r._date=fixDate(r);});chemRows.forEach(r=>{r._date=fixDate(r);});
+    const seedLabMap={};seedLabRows.forEach(r=>{const key=r._date+'|'+(r.c[2]?.v||'')+'|'+(r.c[3]?.v||'')+'|'+(r.c[4]?.v||'')+'|'+(r.c[5]?.v||'');if(!seedLabMap[key]) seedLabMap[key]=[];seedLabMap[key].push({name:(r.c[6]?.v||'').toString(),pkt:r.c[7]?.v||0,tray:r.c[8]?.v||0});});
+    
+    if(!workType || workType==='assign'){let assignRows=parseRows(assignTxt);assignRows.forEach(r=>{r._date=fixDate(r);});const myAssign=assignRows.filter(r=>{if(!r._date||r._date<from||r._date>to) return false;if((r.c[1]?.v||'').toString()!==myName) return false;if(areaFilter && (r.c[2]?.v||'').toString()!==areaFilter) return false;return true;});if(myAssign.length>0){html+='<div class="rep-card" style="margin-top:10px;"><div class="rep-title">📋 Morning Assignment — '+myAssign.length+' Records</div><div class="rep-sub">'+from+' to '+to+'</div><div class="stat-grid"><div class="stat-item"><span class="sv">'+myAssign.length+'</span><div class="sl">Total Assignments</div></div><div class="stat-item"><span class="sv">'+Object.keys({...new Set(myAssign.map(r=>r.c[3]?.v))}).length+'</span><div class="sl">Kaam Types</div></div><div class="stat-item"><span class="sv">'+myAssign.reduce((s,r)=>s+(r.c[4]?.v||'').toString().split(',').length,0)+'</span><div class="sl">Total Labour</div></div></div></div>';html+='<div class="rep-card"><div class="rep-title">📋 Assignment Detail <span style="font-size:11px;color:var(--g5);font-weight:600;">— row pe click karo</span></div><div style="overflow-x:auto;"><table class="att-table"><thead><tr><th></th><th>Date</th><th>Area</th><th>Kaam Type</th><th>Labour Count</th><th>Labour Names</th></tr></thead><tbody>';myAssign.forEach((r,idx)=>{const labStr=(r.c[4]?.v||'').toString();const labs=labStr.split(',').map(s=>s.trim()).filter(Boolean);const rid='assign_exp_'+idx;let inner='';if(labs.length>0){inner+='<table><thead><tr><th>👤 Labour</th></tr></thead><tbody>';labs.forEach(l=>{inner+='<tr><td>'+l+'</td></tr>';});inner+='</tbody></table>';}const ex=expRow(inner,6);html+='<tr class="exp-toggle" onclick="toggleRow(\''+ex.rid+'\')"><td><span class="exp-arrow">▶</span></td><td>'+r._date+'</td><td>'+(r.c[2]?.v||'')+'</td><td>'+(r.c[3]?.v||'')+'</td><td>'+labs.length+'</td><td>'+labStr+'</td></tr>';html+=ex.row;});html+='</tbody></table></div></div>';}else{html+='<div class="rep-card" style="text-align:center;color:var(--g5);padding:16px;">Morning Assignment — koi record nahi mila.</div>';};}
+    
+    if(!workType || workType==='seed'){let seedRows=parseRows(seedTxt);seedRows.forEach(r=>{r._date=fixDate(r);});const mySeed=seedRows.filter(r=>{if(!r._date||r._date<from||r._date>to) return false;if((r.c[1]?.v||'').toString()!==myName) return false;if(vegFilter && (r.c[4]?.v||'').toString()!==vegFilter) return false;if(areaFilter && (r.c[2]?.v||'').toString()!==areaFilter) return false;if(varFilter && !(r.c[5]?.v||'').toString().toLowerCase().includes(varFilter)) return false;return true;});let sPkt=0,sTrays=0,sPlants=0;const byVeg={};mySeed.forEach(r=>{const veg=(r.c[4]?.v||'').toString();const variety=(r.c[5]?.v||'').toString();const pkt=parseFloat(r.c[7]?.v)||0;const trays=parseFloat(r.c[8]?.v)||0;const plants=parseFloat(r.c[11]?.v)||0;sPkt+=pkt;sTrays+=trays;sPlants+=plants;if(!byVeg[veg]) byVeg[veg]={pkt:0,trays:0,plants:0,varieties:{}};byVeg[veg].pkt+=pkt;byVeg[veg].trays+=trays;byVeg[veg].plants+=plants;if(!byVeg[veg].varieties[variety]) byVeg[veg].varieties[variety]={pkt:0,trays:0,plants:0};byVeg[veg].varieties[variety].pkt+=pkt;byVeg[veg].varieties[variety].trays+=trays;byVeg[veg].varieties[variety].plants+=plants;});html+='<div class="rep-card"><div class="rep-title">🌱 Seed Sowing — '+mySeed.length+' Records</div><div class="rep-sub">'+from+' to '+to+'</div><div class="stat-grid"><div class="stat-item"><span class="sv">'+sPkt.toLocaleString()+'</span><div class="sl">Total PKT</div></div><div class="stat-item"><span class="sv">'+sTrays.toLocaleString()+'</span><div class="sl">Total Trays</div></div><div class="stat-item"><span class="sv">'+sPlants.toLocaleString()+'</span><div class="sl">Total Plants</div></div></div></div>';if(mySeed.length>0){html+='<div class="rep-card"><div class="rep-title">🥬 Vegetable-wise</div><div style="overflow-x:auto;"><table class="att-table"><thead><tr><th>Vegetable</th><th>Variety</th><th>PKT</th><th>Trays</th><th>Plants</th></tr></thead><tbody>';Object.entries(byVeg).forEach(([veg,vdata])=>{html+='<tr style="background:var(--gp);font-weight:700;"><td>'+veg+'</td><td style="color:var(--g5);">'+Object.keys(vdata.varieties).length+' varieties</td><td>'+vdata.pkt+'</td><td>'+vdata.trays+'</td><td>'+vdata.plants.toLocaleString()+'</td></tr>';Object.entries(vdata.varieties).forEach(([vr,vrdata])=>{html+='<tr><td style="color:var(--g5);padding-left:16px;">↳</td><td>'+vr+'</td><td>'+vrdata.pkt+'</td><td>'+vrdata.trays+'</td><td>'+vrdata.plants.toLocaleString()+'</td></tr>';});});html+='<tr style="background:var(--gd);color:white;font-weight:800;"><td colspan="2">TOTAL</td><td>'+sPkt+'</td><td>'+sTrays+'</td><td>'+sPlants.toLocaleString()+'</td></tr>';html+='</tbody></table></div></div>';html+='<div class="rep-card"><div class="rep-title">📋 Seed Sowing Detail <span style="font-size:11px;color:var(--g5);font-weight:600;">— row pe click karo</span></div><div style="overflow-x:auto;"><table class="att-table"><thead><tr><th></th><th>Date</th><th>Area</th><th>Vegetable</th><th>Variety</th><th>Lot</th><th>PKT</th><th>Trays</th><th>Plants</th></tr></thead><tbody>';mySeed.forEach(r=>{const key=r._date+'|'+(r.c[2]?.v||'')+'|'+(r.c[4]?.v||'')+'|'+(r.c[5]?.v||'')+'|'+(r.c[6]?.v||'');const labs=seedLabMap[key]||[];let inner='';if(labs.length>0){inner+='<table><thead><tr><th>👤 Labour</th><th>PKT</th><th>Tray</th></tr></thead><tbody>';labs.forEach(l=>{inner+='<tr><td>'+l.name+'</td><td>'+l.pkt+'</td><td>'+l.tray+'</td></tr>';});inner+='</tbody></table>';}else{inner='<div style="color:var(--g5);font-size:12px;">Labour breakdown nahi mila.</div>';}const ex=expRow(inner,9);html+='<tr class="exp-toggle" onclick="toggleRow(\''+ex.rid+'\')"><td><span class="exp-arrow">▶</span></td><td>'+r._date+'</td><td>'+(r.c[2]?.v||'')+'</td><td>'+(r.c[4]?.v||'')+'</td><td>'+(r.c[5]?.v||'')+'</td><td>'+(r.c[6]?.v||'')+'</td><td>'+(r.c[7]?.v||0)+'</td><td>'+(r.c[8]?.v||0)+'</td><td>'+(parseFloat(r.c[11]?.v)||0).toLocaleString()+'</td></tr>';html+=ex.row;});html+='<tr style="background:var(--gd);color:white;font-weight:800;"><td colspan="6">TOTAL</td><td>'+sPkt+'</td><td>'+sTrays+'</td><td>'+sPlants.toLocaleString()+'</td></tr>';html+='</tbody></table></div></div>';}else{html+='<div class="rep-card" style="text-align:center;color:var(--g5);padding:16px;">Seed Sowing — koi record nahi mila.</div>';}}
+    
+    if(!workType || workType==='water' || workType==='spray'){let watRows=parseRows(watTxt);let sprRows=parseRows(sprTxt);watRows.forEach(r=>{r._date=fixDate(r);});sprRows.forEach(r=>{r._date=fixDate(r);});const myWat=watRows.filter(r=>{if(!r._date||r._date<from||r._date>to) return false;if((r.c[1]?.v||'').toString()!==myName) return false;if(areaFilter && (r.c[2]?.v||'').toString()!==areaFilter) return false;return true;});const mySpr=sprRows.filter(r=>{if(!r._date||r._date<from||r._date>to) return false;if((r.c[1]?.v||'').toString()!==myName) return false;if(areaFilter && (r.c[2]?.v||'').toString()!==areaFilter) return false;return true;});const totalWaterL=myWat.reduce((s,r)=>s+(parseFloat(r.c[7]?.v)||0),0);html+='<div class="rep-card"><div class="rep-title">💧 Watering & Spraying — '+(myWat.length+mySpr.length)+' Records</div><div class="rep-sub">'+from+' to '+to+'</div><div class="stat-grid"><div class="stat-item"><span class="sv">'+myWat.length+'</span><div class="sl">Watering</div></div><div class="stat-item"><span class="sv">'+mySpr.length+'</span><div class="sl">Spraying</div></div><div class="stat-item"><span class="sv">'+totalWaterL.toLocaleString()+'L</span><div class="sl">Total Pani</div></div></div></div>';if(myWat.length+mySpr.length>0){html+='<div class="rep-card"><div class="rep-title">📋 Watering & Spraying Detail <span style="font-size:11px;color:var(--g5);font-weight:600;">— row pe click karo</span></div><div style="overflow-x:auto;"><table class="att-table"><thead><tr><th></th><th>Date</th><th>Area</th><th>Type</th><th>Method/Sprayer</th><th>Pani/Pumps</th><th>Labour</th></tr></thead><tbody>';myWat.forEach(r=>{const labs=wsLabRows.filter(w=>w._date===r._date && (w.c[2]?.v||'')===(r.c[2]?.v||'') && (w.c[3]?.v||'')==='water');let inner='';if(labs.length>0){inner+='<table><thead><tr><th>👤 Labour</th><th>Ghante</th></tr></thead><tbody>';labs.forEach(l=>{inner+='<tr><td>'+(l.c[4]?.v||'')+'</td><td>'+(l.c[5]?.v||0)+'</td></tr>';});inner+='</tbody></table>';}else{inner='<div style="color:var(--g5);font-size:12px;">Labour detail nahi mila.</div>';}const ex=expRow(inner,7);html+='<tr class="exp-toggle" onclick="toggleRow(\''+ex.rid+'\')"><td><span class="exp-arrow">▶</span></td><td>'+r._date+'</td><td>'+(r.c[2]?.v||'')+'</td><td>💧 Watering</td><td>'+(r.c[6]?.v||'')+'</td><td>'+(r.c[7]?.v||0)+'L</td><td>'+(r.c[9]?.v||0)+'</td></tr>';html+=ex.row;});mySpr.forEach(r=>{const labs=wsLabRows.filter(w=>w._date===r._date && (w.c[2]?.v||'')===(r.c[2]?.v||'') && (w.c[3]?.v||'')==='spray');const chems=chemRows.filter(c=>c._date===r._date && (c.c[2]?.v||'')===(r.c[2]?.v||''));let inner='';if(chems.length>0){inner+='<table><thead><tr><th>🧪 Chemical</th><th>Dose</th><th>Unit</th><th>Purpose</th></tr></thead><tbody>';chems.forEach(c=>{inner+='<tr><td>'+(c.c[3]?.v||'')+'</td><td>'+(c.c[4]?.v||'')+'</td><td>'+(c.c[5]?.v||'')+'</td><td>'+(c.c[6]?.v||'')+'</td></tr>';});inner+='</tbody></table>';}if(labs.length>0){inner+='<table style="margin-top:6px;"><thead><tr><th>👤 Labour</th><th>Pumps</th></tr></thead><tbody>';labs.forEach(l=>{inner+='<tr><td>'+(l.c[4]?.v||'')+'</td><td>'+(l.c[6]?.v||0)+'</td></tr>';});inner+='</tbody></table>';}if(!inner) inner='<div style="color:var(--g5);font-size:12px;">Detail nahi mila.</div>';const ex=expRow(inner,7);html+='<tr class="exp-toggle" onclick="toggleRow(\''+ex.rid+'\')"><td><span class="exp-arrow">▶</span></td><td>'+r._date+'</td><td>'+(r.c[2]?.v||'')+'</td><td>🌿 Spraying</td><td>'+(r.c[6]?.v||'')+'</td><td>'+(r.c[7]?.v||0)+' pumps</td><td>'+(r.c[10]?.v||0)+'</td></tr>';html+=ex.row;});html+='</tbody></table></div></div>';}else{html+='<div class="rep-card" style="text-align:center;color:var(--g5);padding:16px;">Watering/Spraying — koi record nahi mila.</div>';}}
+    
+    con.innerHTML=html;
+  }).catch(()=>{con.innerHTML='<div class="rep-card" style="text-align:center;color:var(--rd);padding:20px;">⚠️ Data load nahi hua. Internet check karo.</div>';});
+}
+
+function loadLabourReport(){
+  const from=document.getElementById('lrFrom').value;
+  const to=document.getElementById('lrTo').value;
+  const labFilter=document.getElementById('lrLabour').value;
+  const con=document.getElementById('labourReportContent');
+  con.innerHTML='<div class="card" style="margin-top:10px;text-align:center;padding:20px;"><div style="font-size:30px;">⏳</div><div style="font-weight:700;color:var(--gd);">Report load ho rahi hai...</div></div>';
+
+  const ts=Date.now();
+  Promise.all([
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Attendance%20Records&headers=1&t='+ts).then(r=>r.text()).catch(()=>''),
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Seed%20Labour%20Data&headers=1&t='+ts).then(r=>r.text()).catch(()=>''),
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=W-S%20Labour&headers=1&t='+ts).then(r=>r.text()).catch(()=>'')
+  ]).then(([attTxt, seedLabTxt, wsTxt])=>{
+
+    function parseRows(txt){
+      try{
+        const json=JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+        return json.table.rows.filter(r=>r.c&&r.c[0]&&r.c[0].v&&r.c[0].v!=='Date');
+      }catch(e){return [];}
+    }
+    function fixDate(r){
+      if(!r.c||!r.c[0]||!r.c[0].v) return '';
+      let d=r.c[0].v.toString();
+      if(d.startsWith('Date(')){
+        const pts=d.replace('Date(','').replace(')','').split(',');
+        d=pts[0]+'-'+String(parseInt(pts[1])+1).padStart(2,'0')+'-'+String(pts[2]).padStart(2,'0');
+      }
+      return d;
+    }
+    function inRange(d){ return d && d>=from && d<=to; }
+
+    // ── Attendance ──
+    const attRows=parseRows(attTxt);
+    attRows.forEach(r=>{r._date=fixDate(r);});
+
+    // ── Seed Labour ──
+    const seedLabRows=parseRows(seedLabTxt);
+    seedLabRows.forEach(r=>{r._date=fixDate(r);});
+
+    // ── W-S Labour ──
+    const wsRows=parseRows(wsTxt);
+    wsRows.forEach(r=>{r._date=fixDate(r);});
+
+    // Build labour summary
+    const summary={};
+    function ensure(name){
+      if(!summary[name]) summary[name]={present:0,half:0,absent:0,pkt:0,tray:0,plants:0,wsCount:0,wsHours:0,records:[]};
+      return summary[name];
+    }
+
+    attRows.forEach(r=>{
+      if(!inRange(r._date)) return;
+      const name=(r.c[4]?.v||'').toString().trim();
+      if(!name) return;
+      if(labFilter && name!==labFilter) return;
+      const status=(r.c[5]?.v||'').toString();
+      const s=ensure(name);
+      if(status==='Present') s.present++;
+      else if(status==='Half Day') s.half++;
+      else if(status==='Absent') s.absent++;
+      s.records.push({date:r._date,type:'👷 Attendance',detail:status+' — '+(r.c[3]?.v||'')+' ('+(r.c[2]?.v||'')+')'});
+    });
+
+    seedLabRows.forEach(r=>{
+      if(!inRange(r._date)) return;
+      const name=(r.c[6]?.v||'').toString().trim();
+      if(!name) return;
+      if(labFilter && name!==labFilter) return;
+      const s=ensure(name);
+      s.pkt+=parseFloat(r.c[7]?.v)||0;
+      s.tray+=parseFloat(r.c[8]?.v)||0;
+      s.plants+=parseFloat(r.c[9]?.v)||0;
+      s.records.push({date:r._date,type:'🌱 Seed Sowing',detail:(r.c[3]?.v||'')+' '+(r.c[4]?.v||'')+' — PKT:'+(r.c[7]?.v||0)+', Tray:'+(r.c[8]?.v||0)+' ('+(r.c[2]?.v||'')+')'});
+    });
+
+    wsRows.forEach(r=>{
+      if(!inRange(r._date)) return;
+      const name=(r.c[4]?.v||'').toString().trim();
+      if(!name) return;
+      if(labFilter && name!==labFilter) return;
+      const s=ensure(name);
+      s.wsCount++;
+      s.wsHours+=parseFloat(r.c[5]?.v)||0;
+      const kaam=(r.c[3]?.v||'')==='spray'?'🌿 Spraying':'💧 Watering';
+      s.records.push({date:r._date,type:kaam,detail:'Ghante:'+(r.c[5]?.v||0)+', Pumps:'+(r.c[6]?.v||0)+' ('+(r.c[2]?.v||'')+')'});
+    });
+
+    const names=Object.keys(summary).sort();
+
+    if(names.length===0){
+      con.innerHTML='<div class="rep-card" style="text-align:center;color:var(--g5);padding:30px;">Is filter mein koi labour record nahi mila.</div>';
+      return;
+    }
+
+    // Totals
+    let tP=0,tH=0,tA=0,tPkt=0,tTray=0,tPlants=0,tWs=0,tWsH=0;
+    names.forEach(n=>{
+      const s=summary[n];
+      tP+=s.present; tH+=s.half; tA+=s.absent;
+      tPkt+=s.pkt; tTray+=s.tray; tPlants+=s.plants;
+      tWs+=s.wsCount; tWsH+=s.wsHours;
+    });
+
+    let html='';
+
+    // Summary card
+    html+='<div class="rep-card" style="margin-top:10px;"><div class="rep-title">👷 Labour Summary — '+names.length+' Labour</div>'+
+      '<div class="rep-sub">'+from+' to '+to+'</div>'+
+      '<div class="stat-grid">'+
+      '<div class="stat-item"><span class="sv" style="color:var(--gm);">'+tP+'</span><div class="sl">Present Days</div></div>'+
+      '<div class="stat-item"><span class="sv" style="color:#f57c00;">'+tH+'</span><div class="sl">Half Days</div></div>'+
+      '<div class="stat-item"><span class="sv" style="color:var(--rd);">'+tA+'</span><div class="sl">Absent Days</div></div>'+
+      '</div></div>';
+
+    // Detail table (expandable — labour pe click karo)
+    html+='<div class="rep-card"><div class="rep-title">📋 Labour-wise Detail <span style="font-size:11px;color:var(--g5);font-weight:600;">— row pe click karo</span></div>'+
+      '<div style="overflow-x:auto;"><table class="att-table">'+
+      '<thead><tr><th></th><th>Labour</th><th>Present</th><th>Half</th><th>Absent</th><th>Seed PKT</th><th>Seed Tray</th><th>W/S Days</th></tr></thead><tbody>';
+    names.forEach((n,idx)=>{
+      const s=summary[n];
+      const rid='lr_exp_'+idx;
+      html+='<tr class="exp-toggle" onclick="toggleRow(\''+rid+'\')"><td><span class="exp-arrow">▶</span></td><td style="font-weight:700;">'+n+'</td>'+
+        '<td>'+s.present+'</td><td>'+s.half+'</td><td>'+s.absent+'</td>'+
+        '<td>'+s.pkt+'</td><td>'+s.tray+'</td><td>'+s.wsCount+'</td></tr>';
+      let inner='';
+      const recs=s.records.slice().sort((a,b)=>a.date<b.date?-1:1);
+      if(recs.length>0){
+        inner+='<table><thead><tr><th>Date</th><th>Type</th><th>Detail</th></tr></thead><tbody>';
+        recs.forEach(rc=>{ inner+='<tr><td>'+rc.date+'</td><td>'+rc.type+'</td><td>'+rc.detail+'</td></tr>'; });
+        inner+='</tbody></table>';
+      } else {
+        inner='<div style="color:var(--g5);font-size:12px;">Koi record nahi mila.</div>';
+      }
+      html+='<tr class="exp-row" id="'+rid+'"><td colspan="8" class="exp-inner">'+inner+'</td></tr>';
+    });
+    html+='<tr style="background:var(--gd);color:white;font-weight:800;">'+
+      '<td colspan="2">TOTAL</td><td>'+tP+'</td><td>'+tH+'</td><td>'+tA+'</td>'+
+      '<td>'+tPkt+'</td><td>'+tTray+'</td><td>'+tWs+'</td></tr>';
+    html+='</tbody></table></div></div>';
+
+    con.innerHTML=html;
+  }).catch(()=>{
+    con.innerHTML='<div class="rep-card" style="text-align:center;color:var(--rd);padding:20px;">⚠️ Data load nahi hua. Internet check karo.</div>';
+  });
+}
+
+function repBtnClick(){
+  const title=document.getElementById('repTitle')?.textContent||'';
+  if(title.includes('Attendance')) loadAttReport();
+  else loadReport();
+}
+
+function loadReport(){
+  const from=document.getElementById('repFrom').value;
+  const to=document.getElementById('repTo').value;
+  const con=document.getElementById('reportContent');
+  con.innerHTML='<div class="card" style="margin-top:10px;text-align:center;padding:20px;"><div style="font-size:40px;margin-bottom:10px;">⏳</div><div style="font-weight:700;color:var(--gd);font-size:15px;">Report Load Ho Rahi Hai...</div></div>';
+  
+  // Load from multiple sheets
+  const sheets=['Variety Records','Attendance Records','Spraying Records','Watering Records','Morning Assignment'];
+  const results={};
+  let loaded=0;
+  
+  sheets.forEach(sheet=>{
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet='+encodeURIComponent(sheet)+'&tq='+encodeURIComponent('select * where A >= date \''+from+'\' and A <= date \''+to+'\''))
+      .then(r=>r.text())
+      .then(txt=>{
+        try{
+          const json=JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+          results[sheet]=json.table.rows||[];
+        }catch(e){results[sheet]=[];}
+        loaded++;
+        if(loaded===sheets.length) renderReport(results, from, to);
+      }).catch(()=>{results[sheet]=[];loaded++;if(loaded===sheets.length) renderReport(results,from,to);});
+  });
+}
+
+function renderReport(data, from, to){
+  const con=document.getElementById('reportContent');
+  let html='';
+  
+  // Variety Records
+  const vRows=data['Variety Records']||[];
+  const totalPlants=vRows.reduce((s,r)=>s+(parseFloat(r.c?.[11]?.v)||0),0);
+  html+='<div class="rep-card"><div class="rep-title">🌱 Seed Sowing</div><div class="rep-sub">'+from+' se '+to+'</div>'+
+    '<div class="stat-grid">'+
+    '<div class="stat-item"><span class="sv">'+vRows.length+'</span><div class="sl">Entries</div></div>'+
+    '<div class="stat-item"><span class="sv">'+totalPlants.toLocaleString()+'</span><div class="sl">Total Plants</div></div>'+
+    '<div class="stat-item"><span class="sv">'+new Set(vRows.map(r=>r.c?.[1]?.v)).size+'</span><div class="sl">Supervisors</div></div>'+
+    '</div>';
+  if(vRows.length>0){
+    html+='<div style="overflow-x:auto;"><table class="att-table"><thead><tr><th>Date</th><th>Supervisor</th><th>Variety</th><th>PKT</th><th>Plants</th></tr></thead><tbody>';
+    vRows.slice(0,20).forEach(r=>{
+      if(!r.c) return;
+      html+='<tr><td>'+(r.c[0]?.v||'')+' </td><td>'+(r.c[1]?.v||'')+'</td><td>'+(r.c[5]?.v||'')+'</td><td>'+(r.c[7]?.v||0)+'</td><td>'+(r.c[11]?.v||0)+'</td></tr>';
+    });
+    html+='</tbody></table></div>';
+    if(vRows.length>20) html+='<div style="text-align:center;color:var(--g5);padding:8px;font-size:12px;">... aur '+(vRows.length-20)+' entries</div>';
+  }
+  html+='</div>';
+
+  // Attendance Records
+  const attRows=data['Attendance Records']||[];
+  const present=attRows.filter(r=>r.c?.[5]?.v==='Present').length;
+  const half=attRows.filter(r=>r.c?.[5]?.v==='Half Day').length;
+  const absent=attRows.filter(r=>r.c?.[5]?.v==='Absent').length;
+  const totalWage=attRows.reduce((s,r)=>s+(parseFloat(r.c?.[7]?.v)||0)+(parseFloat(r.c?.[9]?.v)||0),0);
+  html+='<div class="rep-card"><div class="rep-title">👷 Attendance</div><div class="rep-sub">'+from+' se '+to+'</div>'+
+    '<div class="stat-grid">'+
+    '<div class="stat-item"><span class="sv" style="color:var(--gm);">'+present+'</span><div class="sl">Present</div></div>'+
+    '<div class="stat-item"><span class="sv" style="color:#f57c00;">'+half+'</span><div class="sl">Half Day</div></div>'+
+    '<div class="stat-item"><span class="sv" style="color:var(--rd);">'+absent+'</span><div class="sl">Absent</div></div>'+
+    '</div>'+
+    '<div style="background:var(--gp);border-radius:10px;padding:10px;text-align:center;font-weight:700;color:var(--gm);">💰 Total Wage: ₹'+totalWage+'</div>'+
+    '</div>';
+
+  // Watering + Spraying
+  const spRows=data['Spraying Records']||[];
+  const watRows=data['Watering Records']||[];
+  html+='<div class="rep-card"><div class="rep-title">💧 Watering & Spraying</div><div class="rep-sub">'+from+' se '+to+'</div>'+
+    '<div class="stat-grid">'+
+    '<div class="stat-item"><span class="sv">'+watRows.length+'</span><div class="sl">Watering</div></div>'+
+    '<div class="stat-item"><span class="sv">'+spRows.length+'</span><div class="sl">Spraying</div></div>'+
+    '<div class="stat-item"><span class="sv">'+(watRows.length+spRows.length)+'</span><div class="sl">Total</div></div>'+
+    '</div></div>';
+
+  con.innerHTML=html;
+}
+
+// ════ ADMIN ════
+function loadUserList(){
+  const con=document.getElementById('userList');
+  con.innerHTML='';
+  Object.entries(SUP_DATA).forEach(([name,data])=>{
+    const d=document.createElement('div'); d.className='admin-row';
+    d.innerHTML='<div class="admin-info"><div class="an">'+name+'</div>'+
+      '<div class="ar">PIN: '+data.pin+' <span class="tag '+(data.role==='Admin'?'adm':data.role==='Manager'?'mgr':'sup')+'">'+data.role+'</span></div></div>'+
+      '<button class="toggle-btn '+(data.status==='inactive'?'inactive':'active')+'" onclick="toast(\'Sheet mein jaake status badlo!\',\'error\')">'+
+      (data.status==='inactive'?'Active Karo':'Band Karo')+'</button>';
+    con.appendChild(d);
+  });
+}
+
+function addUser(){
+  const name=document.getElementById('newUserName').value.trim();
+  const pin=document.getElementById('newUserPin').value.trim();
+  const role=document.getElementById('newUserRole').value;
+  if(!name||!pin){toast('❗ Naam aur PIN zaroori hai!','error');return;}
+  toast('✅ User info note karo — Sheet mein manually add karo:\nNaam: '+name+' | PIN: '+pin+' | Role: '+role,'success');
+}
+
+// ════ SUCCESS ════
+function showSuc(mod, msg){
+  const icons={seed:'🌱',water:'💧',attend:'👷',assign:'📋'};
+  document.getElementById('sucIco').textContent=icons[mod]||'✅';
+  document.getElementById('sucMsg').textContent=msg;
+  document.getElementById('sucScreen').classList.add('show');
+  // Reset btn
+  const btns={seed:'sSub',water:'wSub',attend:'attSub',assign:'asSub'};
+  const btn=document.getElementById(btns[mod]);
+  if(btn){btn.disabled=false;btn.innerHTML='✅ Entry Save Karo';}
+}
+
+function newEntry(){
+  document.getElementById('sucScreen').classList.remove('show');
+  if(curMod==='seed'){document.getElementById('vCon').innerHTML='';document.getElementById('sRem').value='';vCnt=0;Object.keys(lCnt).forEach(k=>delete lCnt[k]);addV();updSS();}
+  else if(curMod==='water'){document.getElementById('cCon').innerHTML='';document.getElementById('wlCon').innerHTML='';document.getElementById('wRem').value='';document.getElementById('wLitre').value='';cCnt=0;wlCnt=0;setWT('water');addWL();updWS();}
+  else if(curMod==='attend'){document.getElementById('attList').innerHTML='';document.getElementById('attRem').value='';renderAttLabour();}
+  else if(curMod==='assign'){document.getElementById('assignCon').innerHTML='';document.getElementById('asRem').value='';akCnt=0;akLabours={};addAssignKaam();}
+}
+function goMenuS(){document.getElementById('sucScreen').classList.remove('show');show('menuScreen');}
+
+// ════ UTILS ════
+
+function toggleRow(id){
+  const row=document.getElementById(id);
+  if(!row) return;
+  row.classList.toggle('show');
+  const btn=row.previousElementSibling;
+  if(btn) btn.classList.toggle('exp-open');
+}
+
+function toast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+type+' show';
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// Labour datalist for seed/water text inputs
+function buildLabourDatalist(){
+  let dl=document.getElementById('labourNames');
+  if(!dl){dl=document.createElement('datalist');dl.id='labourNames';document.body.appendChild(dl);}
+  // Only show labour names, NOT vegetable names
+  if(LABOUR_LIST.length>0){
+    dl.innerHTML=LABOUR_LIST.map(l=>'<option value="'+l.name+'">').join('');
+  }
+}
+// Build after data loads
+setTimeout(buildLabourDatalist, 3000);
+setInterval(buildLabourDatalist, 5000);
+
+// ════ SHIFTING FUNCTIONS ════
+
+const LOCATION = 'bafalgaon';
+let shiftingLabours = {};
+
+function openShiftingForm(){
+  document.getElementById('shDate').valueAsDate = new Date();
+  document.getElementById('shSup').value = curUser.name;
+  
+  const areaSelect = document.getElementById('shArea');
+  areaSelect.innerHTML = '<option value="">-- Select Area --</option>';
+  const areas = ['Saraswati', 'Kedar', 'Onkar', 'Godavari', 'Brahmputra', 'NH'];
+  areas.forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = a;
+    opt.textContent = a;
+    areaSelect.appendChild(opt);
+  });
+  
+  document.getElementById('shCrop').innerHTML = '<option value="">-- Select Crop --</option>';
+  document.getElementById('shVariety').innerHTML = '<option value="">-- Select Variety --</option>';
+  document.getElementById('shLabour').innerHTML = '<option value="">-- Select Labour --</option>';
+  shiftingLabours = {};
+  updateShiftingLabourList();
+  
+  loadVeggies().then(() => {
+    show('shiftingScreen');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if(document.getElementById('shArea')){
+    document.getElementById('shArea').addEventListener('change', loadShiftingVarieties);
+  }
+  if(document.getElementById('shCrop')){
+    document.getElementById('shCrop').addEventListener('change', loadShiftingVarieties);
+  }
+  if(document.getElementById('dpCrop')){
+    document.getElementById('dpCrop').addEventListener('change', loadDispatchVarieties);
+  }
+  if(document.getElementById('dpVariety')){
+    document.getElementById('dpVariety').addEventListener('change', validateSowingDate);
+  }
+  if(document.getElementById('dpSowingDate')){
+    document.getElementById('dpSowingDate').addEventListener('change', validateSowingDate);
+  }
+});
+
+function loadShiftingVarieties(){
+  const crop = document.getElementById('shCrop').value;
+  const varitySelect = document.getElementById('shVariety');
+  varitySelect.innerHTML = '<option value="">-- Select Variety --</option>';
+  
+  if(!crop) return;
+  
+  fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Variety%20Master&headers=1&t='+Date.now())
+    .then(r=>r.text())
+    .then(txt=>{
+      try{
+        const json = JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+        const rows = json.table.rows.filter(r => r.c && r.c[1] && r.c[1].v && r.c[1].v.toString() === crop);
+        const varieties = [...new Set(rows.map(r => (r.c[2]?.v||'').toString()))];
+        varieties.forEach(v => {
+          if(v){
+            const opt = document.createElement('option');
+            opt.value = v;
+            opt.textContent = v;
+            varitySelect.appendChild(opt);
+          }
+        });
+      }catch(e){}
+    }).catch(()=>{});
+}
+
+function loadShiftingLabour(){
+  const date = document.getElementById('shDate').value;
+  const area = document.getElementById('shArea').value;
+  const sup = document.getElementById('shSup').value;
+  
+  if(!date || !area || !sup){
+    document.getElementById('shLabour').innerHTML = '<option value="">-- Select Labour --</option>';
+    return;
+  }
+  
+  fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Morning%20Assignment&headers=1&t='+Date.now())
+    .then(r=>r.text())
+    .then(txt=>{
+      try{
+        const json = JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+        const rows = json.table.rows.filter(r => {
+          if(!r.c || !r.c[0]) return false;
+          const rowDate = (r.c[0]?.v||'').toString();
+          const rowArea = (r.c[2]?.v||'').toString();
+          const rowSup = (r.c[1]?.v||'').toString();
+          return rowDate === date && rowArea === area && rowSup === sup;
+        });
+        
+        const labourSet = new Set();
+        rows.forEach(r => {
+          const labStr = (r.c[4]?.v||'').toString();
+          labStr.split(',').forEach(l => {
+            const labour = l.trim();
+            if(labour) labourSet.add(labour);
+          });
+        });
+        
+        const labourSelect = document.getElementById('shLabour');
+        labourSelect.innerHTML = '<option value="">-- Select Labour --</option>';
+        labourSet.forEach(l => {
+          const opt = document.createElement('option');
+          opt.value = l;
+          opt.textContent = l;
+          labourSelect.appendChild(opt);
+        });
+      }catch(e){}
+    }).catch(()=>{});
+}
+
+function addShiftingLabour(){
+  const labour = document.getElementById('shLabour').value;
+  const tray = document.getElementById('shTray').value;
+  
+  if(!labour){
+    toast('❗ Labour select karo!', 'error');
+    return;
+  }
+  if(!tray || parseInt(tray) < 0){
+    toast('❗ Tray count valid nahi hai!', 'error');
+    return;
+  }
+  
+  if(shiftingLabours[labour]){
+    toast('⚠️ Yeh labour pehle se add hai!', 'error');
+    return;
+  }
+  
+  shiftingLabours[labour] = parseInt(tray);
+  document.getElementById('shLabour').value = '';
+  document.getElementById('shTray').value = '';
+  updateShiftingLabourList();
+}
+
+function removeShiftingLabour(labour){
+  delete shiftingLabours[labour];
+  updateShiftingLabourList();
+}
+
+function updateShiftingLabourList(){
+  const list = document.getElementById('shLabourList');
+  const labours = Object.keys(shiftingLabours);
+  
+  if(labours.length === 0){
+    list.innerHTML = '<div style="color:var(--g5);font-size:13px;text-align:center;">Koi labour add nahi hua</div>';
+    return;
+  }
+  
+  let html = '<div style="display:flex;flex-direction:column;gap:8px;">';
+  labours.forEach(l => {
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;background:white;padding:10px;border-radius:6px;border-left:3px solid var(--gl);">';
+    html += '<div><div style="font-weight:700;color:var(--g8);">'+l+'</div><div style="font-size:12px;color:var(--g5);">Tray: '+shiftingLabours[l]+'</div></div>';
+    html += '<button onclick="removeShiftingLabour(\''+l.replace(/'/g, "\\'")+'\')" style="background:var(--rd);color:white;border:none;padding:6px 10px;border-radius:4px;cursor:pointer;font-weight:700;">❌</button>';
+    html += '</div>';
+  });
+  html += '</div>';
+  list.innerHTML = html;
+}
+
+function resetShifting(){
+  document.getElementById('shDate').valueAsDate = new Date();
+  document.getElementById('shArea').value = '';
+  document.getElementById('shCrop').value = '';
+  document.getElementById('shVariety').value = '';
+  document.getElementById('shLabour').value = '';
+  document.getElementById('shTray').value = '';
+  shiftingLabours = {};
+  updateShiftingLabourList();
+  toast('🔄 Form reset ho gaya!');
+}
+
+function submitShifting(){
+  const date = document.getElementById('shDate').value;
+  const sup = document.getElementById('shSup').value;
+  const area = document.getElementById('shArea').value;
+  const crop = document.getElementById('shCrop').value;
+  const variety = document.getElementById('shVariety').value;
+  
+  if(!date || !sup || !area || !crop || !variety){
+    toast('❗ Sab fields zaroori hain!', 'error');
+    return;
+  }
+  
+  const labours = Object.keys(shiftingLabours);
+  if(labours.length === 0){
+    toast('❗ Kam se kam ek labour add karo!', 'error');
+    return;
+  }
+  
+  const btn = event.target;
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Save Ho Raha Hai...';
+  
+  const payload = {
+    module: 'shifting',
+    date: date,
+    supervisor: sup,
+    area: area,
+    crop: crop,
+    variety: variety,
+    labours: labours.map(l => ({name: l, tray: shiftingLabours[l]}))
+  };
+  
+  fetch(API, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'text/plain'},
+    body: JSON.stringify(payload)
+  }).then(() => {
+    toast('✅ Shifting data save ho gaya!');
+    resetShifting();
+    btn.disabled = false;
+    btn.innerHTML = '💾 Save';
+  }).catch(() => {
+    toast('⚠️ Error! Internet check karo.', 'error');
+    btn.disabled = false;
+    btn.innerHTML = '💾 Save';
+  });
+}
+
+function openShiftingReport(){
+  const from = new Date();
+  from.setDate(from.getDate() - 30);
+  document.getElementById('srFrom').valueAsDate = from;
+  document.getElementById('srTo').valueAsDate = new Date();
+  
+  const areaSelect = document.getElementById('srArea');
+  areaSelect.innerHTML = '<option value="">-- Sab Areas --</option>';
+  const areas = ['Saraswati', 'Kedar', 'Onkar', 'Godavari', 'Brahmputra', 'NH'];
+  areas.forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = a;
+    opt.textContent = a;
+    areaSelect.appendChild(opt);
+  });
+  
+  document.getElementById('srCrop').innerHTML = '<option value="">-- Sab Crops --</option>';
+  
+  show('shiftingReportScreen');
+}
+
+function loadShiftingReport(){
+  const from = document.getElementById('srFrom').value;
+  const to = document.getElementById('srTo').value;
+  const areaFilter = document.getElementById('srArea').value;
+  const cropFilter = document.getElementById('srCrop').value;
+  const myName = curUser.name;
+  const con = document.getElementById('shiftingReportContent');
+  
+  con.innerHTML = '<div class="card" style="margin-top:10px;text-align:center;padding:20px;"><div style="font-size:30px;">⏳</div><div style="font-weight:700;color:var(--gd);">Report load ho rahi hai...</div></div>';
+  
+  const ts = Date.now();
+  fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Shifting%20Data&headers=1&t='+ts)
+    .then(r => r.text())
+    .then(txt => {
+      try {
+        const json = JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+        let rows = json.table.rows.filter(r => r.c && r.c[0] && r.c[0].v && r.c[0].v !== 'Date');
+        
+        rows = rows.map(r => {
+          let d = (r.c[0]?.v||'').toString();
+          if(d.startsWith('Date(')){
+            const pts = d.replace('Date(','').replace(')','').split(',');
+            d = pts[0] + '-' + String(parseInt(pts[1])+1).padStart(2,'0') + '-' + String(pts[2]).padStart(2,'0');
+          }
+          r._date = d;
+          return r;
+        });
+        
+        rows = rows.filter(r => {
+          if(r._date < from || r._date > to) return false;
+          if((r.c[1]?.v||'').toString() !== myName) return false;
+          if(areaFilter && (r.c[2]?.v||'').toString() !== areaFilter) return false;
+          if(cropFilter && (r.c[3]?.v||'').toString() !== cropFilter) return false;
+          return true;
+        });
+        
+        if(rows.length === 0){
+          con.innerHTML = '<div class="rep-card" style="text-align:center;color:var(--g5);padding:16px;">Koi shifting record nahi mila.</div>';
+          return;
+        }
+        
+        const grouped = {};
+        rows.forEach(r => {
+          const key = r._date + '|' + (r.c[2]?.v||'');
+          if(!grouped[key]) grouped[key] = [];
+          grouped[key].push(r);
+        });
+        
+        let html = '<div class="rep-card" style="margin-top:10px;"><div class="rep-title">🔄 Shifting — '+rows.length+' Records</div>';
+        html += '<div class="rep-sub">'+from+' to '+to+'</div>';
+        
+        const totalTray = rows.reduce((s, r) => s + (parseFloat(r.c[6]?.v)||0), 0);
+        html += '<div class="stat-grid">';
+        html += '<div class="stat-item"><span class="sv">'+rows.length+'</span><div class="sl">Total Records</div></div>';
+        html += '<div class="stat-item"><span class="sv">'+totalTray+'</span><div class="sl">Total Trays</div></div>';
+        html += '<div class="stat-item"><span class="sv">'+Object.keys(grouped).length+'</span><div class="sl">Date-Area Groups</div></div>';
+        html += '</div></div>';
+        
+        html += '<div class="rep-card"><div class="rep-title">📋 Shifting Detail <span style="font-size:11px;color:var(--g5);font-weight:600;">— row pe click karo</span></div>';
+        html += '<div style="overflow-x:auto;"><table class="att-table">';
+        html += '<thead><tr><th></th><th>Date</th><th>Area</th><th>Crop</th><th>Variety</th><th>Labour</th><th>Trays</th></tr></thead><tbody>';
+        
+        let ridCounter = 0;
+        rows.forEach(r => {
+          const labour = (r.c[5]?.v||'').toString();
+          const tray = parseFloat(r.c[6]?.v)||0;
+          
+          ridCounter++;
+          const rid = 'sr_exp_' + ridCounter;
+          const inner = '<table style="width:100%;"><tr><th style="text-align:left;">Field</th><th style="text-align:left;">Value</th></tr>' +
+            '<tr><td>Supervisor</td><td>'+(r.c[1]?.v||'')+'</td></tr>' +
+            '</table>';
+          
+          html += '<tr class="exp-toggle" onclick="toggleRow(\''+rid+'\')"><td><span class="exp-arrow">▶</span></td>';
+          html += '<td>'+r._date+'</td><td>'+(r.c[2]?.v||'')+'</td><td>'+(r.c[3]?.v||'')+'</td>';
+          html += '<td>'+(r.c[4]?.v||'')+'</td><td>'+labour+'</td><td>'+tray+'</td></tr>';
+          html += '<tr class="exp-row" id="'+rid+'"><td colspan="7" class="exp-inner">'+inner+'</td></tr>';
+        });
+        
+        html += '<tr style="background:var(--gd);color:white;font-weight:800;"><td colspan="6">TOTAL TRAYS</td><td>'+totalTray.toLocaleString()+'</td></tr>';
+        html += '</tbody></table></div></div>';
+        
+        con.innerHTML = html;
+      } catch(e) {
+        con.innerHTML = '<div class="rep-card" style="text-align:center;color:var(--rd);padding:20px;">⚠️ Error: '+e.message+'</div>';
+      }
+    }).catch(err => {
+      con.innerHTML = '<div class="rep-card" style="text-align:center;color:var(--rd);padding:20px;">⚠️ Data load nahi hua. Internet check karo.</div>';
+    });
+}
+
+// ════ DISPATCH FUNCTIONS ════
+
+let dispatchEntries = [];
+
+function openDispatchForm(){
+  document.getElementById('dpDate').valueAsDate = new Date();
+  document.getElementById('dpSup').value = curUser.name;
+  
+  const areaSelect = document.getElementById('dpArea');
+  areaSelect.innerHTML = '<option value="">-- Select Area --</option>';
+  const areas = ['Saraswati', 'Kedar', 'Onkar', 'Godavari', 'Brahmputra', 'NH'];
+  areas.forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = a;
+    opt.textContent = a;
+    areaSelect.appendChild(opt);
+  });
+  
+  document.getElementById('dpCrop').innerHTML = '<option value="">-- Select Crop --</option>';
+  document.getElementById('dpVariety').innerHTML = '<option value="">-- Select Variety --</option>';
+  dispatchEntries = [];
+  updateDispatchEntryList();
+  
+  loadVeggies().then(() => {
+    show('dispatchScreen');
+  });
+}
+
+function loadDispatchVarieties(){
+  const crop = document.getElementById('dpCrop').value;
+  const varitySelect = document.getElementById('dpVariety');
+  varitySelect.innerHTML = '<option value="">-- Select Variety --</option>';
+  
+  if(!crop) return;
+  
+  fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Variety%20Master&headers=1&t='+Date.now())
+    .then(r=>r.text())
+    .then(txt=>{
+      try{
+        const json = JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+        const rows = json.table.rows.filter(r => r.c && r.c[1] && r.c[1].v && r.c[1].v.toString() === crop);
+        const varieties = [...new Set(rows.map(r => (r.c[2]?.v||'').toString()))];
+        varieties.forEach(v => {
+          if(v){
+            const opt = document.createElement('option');
+            opt.value = v;
+            opt.textContent = v;
+            varitySelect.appendChild(opt);
+          }
+        });
+        validateSowingDate();
+      }catch(e){}
+    }).catch(()=>{});
+}
+
+function validateSowingDate(){
+  const variety = document.getElementById('dpVariety').value;
+  const sowingDate = document.getElementById('dpSowingDate').value;
+  const msgDiv = document.getElementById('dpValidationMsg');
+  
+  if(!variety || !sowingDate){
+    msgDiv.style.display = 'none';
+    return;
+  }
+  
+  fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Seed%20Sowing%20Data&headers=1&t='+Date.now())
+    .then(r=>r.text())
+    .then(txt=>{
+      try{
+        const json = JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+        const rows = json.table.rows.filter(r => r.c && r.c[0] && r.c[0].v && r.c[0].v !== 'Date');
+        
+        const matchFound = rows.some(r => {
+          let d = (r.c[0]?.v||'').toString();
+          if(d.startsWith('Date(')){
+            const pts = d.replace('Date(','').replace(')','').split(',');
+            d = pts[0] + '-' + String(parseInt(pts[1])+1).padStart(2,'0') + '-' + String(pts[2]).padStart(2,'0');
+          }
+          const rowVariety = (r.c[5]?.v||'').toString();
+          return d === sowingDate && rowVariety === variety;
+        });
+        
+        if(matchFound){
+          msgDiv.style.display = 'block';
+          msgDiv.style.background = 'var(--g3)';
+          msgDiv.style.color = 'var(--gd)';
+          msgDiv.style.border = '1px solid var(--gl)';
+          msgDiv.innerHTML = '✅ Sowing date verified! Yeh variety is date mein sow hua tha.';
+          document.getElementById('dpSowingDate').setAttribute('data-validated', 'true');
+        } else {
+          msgDiv.style.display = 'block';
+          msgDiv.style.background = '#fff3cd';
+          msgDiv.style.color = '#856404';
+          msgDiv.style.border = '1px solid #ffc107';
+          msgDiv.innerHTML = '⚠️ <strong>Warning:</strong> Is variety ki is date mein sowing record nahi mila! 1 mahine se pehle plant nahi dena chahiye.';
+          document.getElementById('dpSowingDate').setAttribute('data-validated', 'false');
+        }
+      }catch(e){
+        msgDiv.style.display = 'none';
+      }
+    }).catch(()=>{
+      msgDiv.style.display = 'none';
+    });
+}
+
+function addDispatchEntry(){
+  const farmer = document.getElementById('dpFarmer').value.trim();
+  const crop = document.getElementById('dpCrop').value;
+  const variety = document.getElementById('dpVariety').value;
+  const sowingDate = document.getElementById('dpSowingDate').value;
+  const carret = parseInt(document.getElementById('dpCarret').value) || 0;
+  const ppc = parseInt(document.getElementById('dpPPC').value) || 0;
+  const direct = parseInt(document.getElementById('dpDirect').value) || 0;
+  const remarks = document.getElementById('dpRemarks').value.trim();
+  
+  if(!farmer){
+    toast('❗ Farmer name zaroori hai!', 'error');
+    return;
+  }
+  if(!crop || !variety){
+    toast('❗ Crop aur Variety select karo!', 'error');
+    return;
+  }
+  if(!sowingDate){
+    toast('❗ Sowing date zaroori hai!', 'error');
+    return;
+  }
+  if(carret === 0 && direct === 0){
+    toast('❗ Kam se kam Carret ya Direct Plants zaroori hain!', 'error');
+    return;
+  }
+  
+  const totalPlants = (carret * ppc) + direct;
+  const isValidated = document.getElementById('dpSowingDate').getAttribute('data-validated') === 'true';
+  
+  dispatchEntries.push({
+    farmer: farmer,
+    crop: crop,
+    variety: variety,
+    sowingDate: sowingDate,
+    carret: carret,
+    ppc: ppc,
+    direct: direct,
+    totalPlants: totalPlants,
+    remarks: remarks,
+    isValidated: isValidated
+  });
+  
+  document.getElementById('dpFarmer').value = '';
+  document.getElementById('dpCrop').value = '';
+  document.getElementById('dpVariety').value = '';
+  document.getElementById('dpSowingDate').value = '';
+  document.getElementById('dpCarret').value = '';
+  document.getElementById('dpPPC').value = '';
+  document.getElementById('dpDirect').value = '';
+  document.getElementById('dpRemarks').value = '';
+  document.getElementById('dpValidationMsg').style.display = 'none';
+  
+  updateDispatchEntryList();
+  toast('✅ Entry add ho gaya!');
+}
+
+function removeDispatchEntry(index){
+  dispatchEntries.splice(index, 1);
+  updateDispatchEntryList();
+}
+
+function updateDispatchEntryList(){
+  const list = document.getElementById('dpEntryList');
+  
+  if(dispatchEntries.length === 0){
+    list.innerHTML = '<div style="color:var(--g5);font-size:13px;text-align:center;">Koi entry add nahi hua</div>';
+    return;
+  }
+  
+  let html = '';
+  dispatchEntries.forEach((entry, idx) => {
+    const borderColor = entry.isValidated ? 'var(--gl)' : '#ff6b6b';
+    const bgColor = entry.isValidated ? 'white' : '#fff5f5';
+    const validationBadge = entry.isValidated ? '✅' : '⚠️';
+    
+    html += '<div style="background:'+bgColor+';padding:12px;border-radius:6px;border-left:4px solid '+borderColor+';border:1px solid '+borderColor+';">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">';
+    html += '<div style="flex:1;">';
+    html += '<div style="font-weight:700;color:var(--g8);">'+validationBadge+' 👨 '+entry.farmer+' • 🥬 '+entry.crop+' • 🌱 '+entry.variety+'</div>';
+    html += '<div style="font-size:12px;color:var(--g5);margin-top:4px;">';
+    html += '📅 Sowing: '+entry.sowingDate+' | ';
+    html += '📦 '+entry.carret+' Carret | 🌿 '+entry.ppc+' Per Carret | 🌱 '+entry.direct+' Direct = <strong>'+entry.totalPlants+' Total</strong>';
+    if(entry.remarks) html += '<br>📝 '+entry.remarks;
+    html += '</div>';
+    if(!entry.isValidated){
+      html += '<div style="margin-top:6px;font-size:11px;color:#c92a2a;font-weight:600;">⚠️ Sowing date validation failed!</div>';
+    }
+    html += '</div>';
+    html += '<button onclick="removeDispatchEntry('+idx+')" style="background:var(--rd);color:white;border:none;padding:6px 10px;border-radius:4px;cursor:pointer;font-weight:700;flex-shrink:0;">❌</button>';
+    html += '</div></div>';
+  });
+  list.innerHTML = html;
+}
+
+function resetDispatch(){
+  document.getElementById('dpDate').valueAsDate = new Date();
+  document.getElementById('dpArea').value = '';
+  document.getElementById('dpGaadi').value = '';
+  document.getElementById('dpDriver').value = '';
+  document.getElementById('dpMeter').value = '';
+  document.getElementById('dpFarmer').value = '';
+  document.getElementById('dpCrop').value = '';
+  document.getElementById('dpVariety').value = '';
+  document.getElementById('dpSowingDate').value = '';
+  document.getElementById('dpCarret').value = '';
+  document.getElementById('dpPPC').value = '';
+  document.getElementById('dpDirect').value = '';
+  document.getElementById('dpRemarks').value = '';
+  document.getElementById('dpValidationMsg').style.display = 'none';
+  dispatchEntries = [];
+  updateDispatchEntryList();
+  toast('🔄 Form reset ho gaya!');
+}
+
+function submitDispatch(){
+  const date = document.getElementById('dpDate').value;
+  const area = document.getElementById('dpArea').value;
+  const sup = document.getElementById('dpSup').value;
+  const gaadi = document.getElementById('dpGaadi').value.trim();
+  const driver = document.getElementById('dpDriver').value.trim();
+  const meter = document.getElementById('dpMeter').value;
+  
+  if(!date || !area || !gaadi || !driver || meter === ''){
+    toast('❗ Sab header fields zaroori hain!', 'error');
+    return;
+  }
+  
+  if(dispatchEntries.length === 0){
+    toast('❗ Kam se kam ek entry add karo!', 'error');
+    return;
+  }
+  
+  const btn = event.target;
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Save Ho Raha Hai...';
+  
+  const payload = {
+    module: 'dispatch',
+    date: date,
+    area: area,
+    supervisor: sup,
+    gaadi: gaadi,
+    driver: driver,
+    meter: parseFloat(meter),
+    entries: dispatchEntries
+  };
+  
+  fetch(API, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'text/plain'},
+    body: JSON.stringify(payload)
+  }).then(() => {
+    toast('✅ Dispatch data save ho gaya!');
+    resetDispatch();
+    btn.disabled = false;
+    btn.innerHTML = '💾 Save';
+  }).catch(() => {
+    toast('⚠️ Error! Internet check karo.', 'error');
+    btn.disabled = false;
+    btn.innerHTML = '💾 Save';
+  });
+}
+
+function openDispatchReport(){
+  const from = new Date();
+  from.setDate(from.getDate() - 30);
+  document.getElementById('drFrom').valueAsDate = from;
+  document.getElementById('drTo').valueAsDate = new Date();
+  
+  const areaSelect = document.getElementById('drArea');
+  areaSelect.innerHTML = '<option value="">-- Sab Areas --</option>';
+  const areas = ['Saraswati', 'Kedar', 'Onkar', 'Godavari', 'Brahmputra', 'NH'];
+  areas.forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = a;
+    opt.textContent = a;
+    areaSelect.appendChild(opt);
+  });
+  
+  show('dispatchReportScreen');
+}
+
+function loadDispatchReport(){
+  const from = document.getElementById('drFrom').value;
+  const to = document.getElementById('drTo').value;
+  const areaFilter = document.getElementById('drArea').value;
+  const gadiFilter = document.getElementById('drGaadi').value.trim().toLowerCase();
+  const myName = curUser.name;
+  const con = document.getElementById('dispatchReportContent');
+  
+  con.innerHTML = '<div class="card" style="margin-top:10px;text-align:center;padding:20px;"><div style="font-size:30px;">⏳</div><div style="font-weight:700;color:var(--gd);">Report load ho rahi hai...</div></div>';
+  
+  const ts = Date.now();
+  fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=Dispatch%20Data&headers=1&t='+ts)
+    .then(r => r.text())
+    .then(txt => {
+      try {
+        const json = JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+        let rows = json.table.rows.filter(r => r.c && r.c[0] && r.c[0].v && r.c[0].v !== 'Date');
+        
+        rows = rows.map(r => {
+          let d = (r.c[0]?.v||'').toString();
+          if(d.startsWith('Date(')){
+            const pts = d.replace('Date(','').replace(')','').split(',');
+            d = pts[0] + '-' + String(parseInt(pts[1])+1).padStart(2,'0') + '-' + String(pts[2]).padStart(2,'0');
+          }
+          r._date = d;
+          return r;
+        });
+        
+        rows = rows.filter(r => {
+          if(r._date < from || r._date > to) return false;
+          if((r.c[2]?.v||'').toString() !== myName) return false;
+          if(areaFilter && (r.c[1]?.v||'').toString() !== areaFilter) return false;
+          const gaadi = (r.c[3]?.v||'').toString().toLowerCase();
+          if(gadiFilter && !gaadi.includes(gadiFilter)) return false;
+          return true;
+        });
+        
+        if(rows.length === 0){
+          con.innerHTML = '<div class="rep-card" style="text-align:center;color:var(--g5);padding:16px;">Koi dispatch record nahi mila.</div>';
+          return;
+        }
+        
+        const grouped = {};
+        rows.forEach(r => {
+          const key = r._date + '|' + (r.c[3]?.v||'');
+          if(!grouped[key]) grouped[key] = [];
+          grouped[key].push(r);
+        });
+        
+        let html = '<div class="rep-card" style="margin-top:10px;"><div class="rep-title">🚚 Dispatch — '+rows.length+' Records</div>';
+        html += '<div class="rep-sub">'+from+' to '+to+'</div>';
+        
+        const totalPlants = rows.reduce((s, r) => s + (parseFloat(r.c[13]?.v)||0), 0);
+        const verifiedCount = rows.filter(r => (r.c[14]?.v||'').toString().toUpperCase() === 'YES').length;
+        const unverifiedCount = rows.length - verifiedCount;
+        html += '<div class="stat-grid">';
+        html += '<div class="stat-item"><span class="sv">'+rows.length+'</span><div class="sl">Total Entries</div></div>';
+        html += '<div class="stat-item"><span class="sv">'+Object.keys(grouped).length+'</span><div class="sl">Vehicles</div></div>';
+        html += '<div class="stat-item"><span class="sv">'+totalPlants.toLocaleString()+'</span><div class="sl">Total Plants</div></div>';
+        html += '<div class="stat-item"><span class="sv" style="color:var(--rd);">'+unverifiedCount+'</span><div class="sl">Unverified</div></div>';
+        html += '</div></div>';
+        
+        html += '<div class="rep-card"><div class="rep-title">📋 Dispatch Detail <span style="font-size:11px;color:var(--g5);font-weight:600;">— row pe click karo</span></div>';
+        html += '<div style="overflow-x:auto;"><table class="att-table">';
+        html += '<thead><tr><th></th><th>Date</th><th>Gaadi</th><th>Driver</th><th>Farmer</th><th>Crop</th><th>Variety</th><th>Sowing Date</th><th>Carret</th><th>Total Plants</th><th>Status</th></tr></thead><tbody>';
+        
+        let ridCounter = 0;
+        rows.forEach(r => {
+          ridCounter++;
+          const rid = 'dr_exp_' + ridCounter;
+          
+          const sowingDate = (r.c[9]?.v||'');
+          const ppc = (r.c[11]?.v||0);
+          const direct = (r.c[12]?.v||0);
+          const verified = (r.c[14]?.v||'');
+          const remarks = (r.c[15]?.v||'');
+          
+          const isVerified = verified.toString().toUpperCase() === 'YES';
+          const statusBadge = isVerified ? '✅' : '⚠️';
+          const statusColor = isVerified ? 'var(--gl)' : '#ff6b6b';
+          
+          const inner = '<table style="width:100%;"><tr><th style="text-align:left;">Field</th><th style="text-align:left;">Value</th></tr>' +
+            '<tr><td>Date of Sowing</td><td>'+sowingDate+'</td></tr>' +
+            '<tr><td>Sowing Verified</td><td>'+statusBadge+' '+(isVerified ? 'YES' : 'NO')+'</td></tr>' +
+            '<tr><td>Meter Reading</td><td>'+(r.c[5]?.v||0)+'</td></tr>' +
+            '<tr><td>Plant Per Carret</td><td>'+ppc+'</td></tr>' +
+            '<tr><td>Direct Plants</td><td>'+direct+'</td></tr>' +
+            (remarks ? '<tr><td>Remarks</td><td>'+remarks+'</td></tr>' : '') +
+            '</table>';
+          
+          html += '<tr class="exp-toggle" onclick="toggleRow(\''+rid+'\')" style="'+(isVerified ? '' : 'background:#fff5f5;')+'"><td><span class="exp-arrow">▶</span></td>';
+          html += '<td>'+r._date+'</td><td>'+(r.c[3]?.v||'')+'</td><td>'+(r.c[4]?.v||'')+'</td>';
+          html += '<td>'+(r.c[6]?.v||'')+'</td><td>'+(r.c[7]?.v||'')+'</td>';
+          html += '<td>'+(r.c[8]?.v||'')+'</td><td><span style="color:'+statusColor+';font-weight:700;">'+sowingDate+'</span></td>';
+          html += '<td>'+(r.c[10]?.v||0)+'</td>';
+          html += '<td><strong>'+(r.c[13]?.v||0)+'</strong></td>';
+          html += '<td style="color:'+statusColor+';font-weight:700;">'+statusBadge+'</td></tr>';
+          html += '<tr class="exp-row" id="'+rid+'"><td colspan="11" class="exp-inner">'+inner+'</td></tr>';
+        });
+        
+        html += '<tr style="background:var(--gd);color:white;font-weight:800;"><td colspan="9">TOTAL</td><td>'+totalPlants.toLocaleString()+'</td><td></td></tr>';
+        html += '</tbody></table></div></div>';
+        
+        con.innerHTML = html;
+      } catch(e) {
+        con.innerHTML = '<div class="rep-card" style="text-align:center;color:var(--rd);padding:20px;">⚠️ Error: '+e.message+'</div>';
+      }
+    }).catch(err => {
+      con.innerHTML = '<div class="rep-card" style="text-align:center;color:var(--rd);padding:20px;">⚠️ Data load nahi hua. Internet check karo.</div>';
+    });
+}
+
+</script>
+</body>
+</html>
